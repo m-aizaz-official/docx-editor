@@ -14,22 +14,16 @@
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import type { CSSProperties, KeyboardEvent } from 'react';
 import { useTranslation } from '../../i18n';
+import { SYMBOL_CATEGORIES, type SymbolCategory } from './insertSymbolData';
+
+// The categorized glyph data lives in ./insertSymbolData; re-export so the
+// public API surface (via ui.ts) is unchanged.
+export { SYMBOL_CATEGORIES } from './insertSymbolData';
+export type { SymbolCategory } from './insertSymbolData';
 
 // ============================================================================
 // TYPES
 // ============================================================================
-
-/**
- * Symbol category
- */
-export interface SymbolCategory {
-  /** Category name */
-  name: string;
-  /** Display label */
-  label: string;
-  /** Symbols in this category */
-  symbols: string[];
-}
 
 /**
  * Props for InsertSymbolDialog
@@ -39,10 +33,15 @@ export interface InsertSymbolDialogProps {
   isOpen: boolean;
   /** Callback when dialog is closed */
   onClose: () => void;
-  /** Callback when symbol is inserted */
-  onInsert: (symbol: string) => void;
+  /**
+   * Callback when a symbol is inserted. `font` is the chosen font family, or
+   * an empty string for "(normal text)" (insert with no explicit font).
+   */
+  onInsert: (symbol: string, font?: string) => void;
   /** Recently used symbols */
   recentSymbols?: string[];
+  /** Extra fonts to offer in the font picker (e.g. the document's fonts). */
+  fonts?: string[];
   /** Additional CSS class */
   className?: string;
   /** Additional inline styles */
@@ -166,8 +165,16 @@ const SYMBOL_BUTTON_STYLE: CSSProperties = {
   transition: 'all 0.15s',
 };
 
-const PREVIEW_SECTION_STYLE: CSSProperties = {
+// Reserves the preview's vertical space even when nothing is
+// hovered/selected, so moving the cursor between symbols never remounts the
+// preview, reflows the grid, and shifts the hovered cell (which caused a
+// hover-flicker feedback loop).
+const PREVIEW_RESERVE_STYLE: CSSProperties = {
   marginTop: '16px',
+  minHeight: '84px',
+};
+
+const PREVIEW_SECTION_STYLE: CSSProperties = {
   padding: '12px',
   backgroundColor: 'var(--doc-bg-subtle)',
   borderRadius: '4px',
@@ -234,371 +241,127 @@ const DISABLED_BUTTON_STYLE: CSSProperties = {
 // ============================================================================
 
 /**
- * Default symbol categories
- */
-export const SYMBOL_CATEGORIES: SymbolCategory[] = [
-  {
-    name: 'common',
-    label: 'Common',
-    symbols: [
-      '©',
-      '®',
-      '™',
-      '•',
-      '…',
-      '—',
-      '–',
-      '°',
-      '±',
-      '×',
-      '÷',
-      '≠',
-      '≤',
-      '≥',
-      '∞',
-      '√',
-      '∑',
-      '∏',
-      '∫',
-      'π',
-      '€',
-      '£',
-      '¥',
-      '¢',
-      '§',
-      '¶',
-      '†',
-      '‡',
-      '‰',
-      '№',
-    ],
-  },
-  {
-    name: 'arrows',
-    label: 'Arrows',
-    symbols: [
-      '←',
-      '↑',
-      '→',
-      '↓',
-      '↔',
-      '↕',
-      '↖',
-      '↗',
-      '↘',
-      '↙',
-      '⇐',
-      '⇑',
-      '⇒',
-      '⇓',
-      '⇔',
-      '⇕',
-      '⟵',
-      '⟶',
-      '⟷',
-      '➔',
-      '➜',
-      '➞',
-      '➡',
-      '➢',
-      '➣',
-      '➤',
-      '➥',
-      '➦',
-      '➧',
-      '➨',
-    ],
-  },
-  {
-    name: 'math',
-    label: 'Math',
-    symbols: [
-      '+',
-      '−',
-      '×',
-      '÷',
-      '=',
-      '≠',
-      '<',
-      '>',
-      '≤',
-      '≥',
-      '±',
-      '∓',
-      '∞',
-      '√',
-      '∛',
-      '∜',
-      '∑',
-      '∏',
-      '∫',
-      '∂',
-      '∆',
-      '∇',
-      '∈',
-      '∉',
-      '∋',
-      '∅',
-      '∀',
-      '∃',
-      '∄',
-      '⊂',
-      '⊃',
-      '⊆',
-      '⊇',
-      '∪',
-      '∩',
-      '⊕',
-      '⊗',
-      '⊥',
-      '∠',
-      '∟',
-    ],
-  },
-  {
-    name: 'greek',
-    label: 'Greek',
-    symbols: [
-      'α',
-      'β',
-      'γ',
-      'δ',
-      'ε',
-      'ζ',
-      'η',
-      'θ',
-      'ι',
-      'κ',
-      'λ',
-      'μ',
-      'ν',
-      'ξ',
-      'ο',
-      'π',
-      'ρ',
-      'σ',
-      'τ',
-      'υ',
-      'φ',
-      'χ',
-      'ψ',
-      'ω',
-      'Α',
-      'Β',
-      'Γ',
-      'Δ',
-      'Ε',
-      'Ζ',
-      'Η',
-      'Θ',
-      'Ι',
-      'Κ',
-      'Λ',
-      'Μ',
-      'Ν',
-      'Ξ',
-      'Ο',
-      'Π',
-    ],
-  },
-  {
-    name: 'shapes',
-    label: 'Shapes',
-    symbols: [
-      '■',
-      '□',
-      '▪',
-      '▫',
-      '▬',
-      '▭',
-      '▮',
-      '▯',
-      '▰',
-      '▱',
-      '▲',
-      '△',
-      '▴',
-      '▵',
-      '▶',
-      '▷',
-      '▸',
-      '▹',
-      '►',
-      '▻',
-      '▼',
-      '▽',
-      '▾',
-      '▿',
-      '◀',
-      '◁',
-      '◂',
-      '◃',
-      '◄',
-      '◅',
-      '●',
-      '○',
-      '◎',
-      '◉',
-      '◌',
-      '◍',
-      '◐',
-      '◑',
-      '◒',
-      '◓',
-    ],
-  },
-  {
-    name: 'punctuation',
-    label: 'Punctuation',
-    symbols: [
-      '–',
-      '—',
-      '\u2018',
-      '\u2019',
-      '\u201C',
-      '\u201D',
-      '«',
-      '»',
-      '‹',
-      '›',
-      '…',
-      '·',
-      '•',
-      '‣',
-      '⁃',
-      '‐',
-      '‑',
-      '‒',
-      '―',
-      '‖',
-      '′',
-      '″',
-      '‴',
-      '⁗',
-      '‵',
-      '‶',
-      '‷',
-      '※',
-      '‽',
-      '⁂',
-    ],
-  },
-  {
-    name: 'currency',
-    label: 'Currency',
-    symbols: [
-      '$',
-      '¢',
-      '£',
-      '¤',
-      '¥',
-      '₠',
-      '₡',
-      '₢',
-      '₣',
-      '₤',
-      '₥',
-      '₦',
-      '₧',
-      '₨',
-      '₩',
-      '₪',
-      '₫',
-      '€',
-      '₭',
-      '₮',
-      '₯',
-      '₰',
-      '₱',
-      '₲',
-      '₳',
-      '₴',
-      '₵',
-      '₶',
-      '₷',
-      '₸',
-    ],
-  },
-  {
-    name: 'music',
-    label: 'Music',
-    symbols: [
-      '♩',
-      '♪',
-      '♫',
-      '♬',
-      '♭',
-      '♮',
-      '♯',
-      '𝄞',
-      '𝄢',
-      '𝄪',
-      '𝄫',
-      '𝅗𝅥',
-      '𝅘𝅥',
-      '𝅘𝅥𝅮',
-      '𝅘𝅥𝅯',
-      '𝅘𝅥𝅰',
-      '𝆒',
-      '𝆓',
-      '𝄐',
-      '𝄑',
-    ],
-  },
-  {
-    name: 'emoji',
-    label: 'Emoji',
-    symbols: [
-      '😀',
-      '😃',
-      '😄',
-      '😁',
-      '😆',
-      '😅',
-      '🤣',
-      '😂',
-      '🙂',
-      '🙃',
-      '😉',
-      '😊',
-      '😇',
-      '🥰',
-      '😍',
-      '🤩',
-      '😘',
-      '😗',
-      '☺',
-      '😚',
-      '❤',
-      '🧡',
-      '💛',
-      '💚',
-      '💙',
-      '💜',
-      '🖤',
-      '🤍',
-      '💔',
-      '❣',
-      '👍',
-      '👎',
-      '👌',
-      '✌',
-      '🤞',
-      '🤟',
-      '🤘',
-      '👋',
-      '🙏',
-      '✅',
-    ],
-  },
-];
-
-/**
  * Get all symbols flattened
  */
 function getAllSymbols(): string[] {
   return SYMBOL_CATEGORIES.flatMap((cat) => cat.symbols);
 }
+
+/**
+ * A named special character with an optional keyboard shortcut, matching the
+ * "Special Characters" tab in Word's Insert Symbol dialog.
+ */
+export interface SpecialCharacter {
+  char: string;
+  name: string;
+  shortcut?: string;
+}
+
+/** Word's Special Characters tab set (typography + spaces + quotes/dashes). */
+export const SPECIAL_CHARACTERS: SpecialCharacter[] = [
+  { char: '—', name: 'Em Dash', shortcut: 'Alt+Ctrl+Num -' },
+  { char: '–', name: 'En Dash', shortcut: 'Ctrl+Num -' },
+  { char: '‑', name: 'Non-breaking Hyphen', shortcut: 'Ctrl+Shift+_' },
+  { char: '­', name: 'Optional Hyphen', shortcut: 'Ctrl+-' },
+  { char: ' ', name: 'Em Space' },
+  { char: ' ', name: 'En Space' },
+  { char: ' ', name: 'Thin Space' },
+  { char: ' ', name: 'Non-breaking Space', shortcut: 'Ctrl+Shift+Space' },
+  { char: '©', name: 'Copyright', shortcut: 'Alt+Ctrl+C' },
+  { char: '®', name: 'Registered', shortcut: 'Alt+Ctrl+R' },
+  { char: '™', name: 'Trademark', shortcut: 'Alt+Ctrl+T' },
+  { char: '§', name: 'Section' },
+  { char: '¶', name: 'Paragraph' },
+  { char: '…', name: 'Ellipsis', shortcut: 'Alt+Ctrl+.' },
+  { char: '‘', name: 'Left Single Quote' },
+  { char: '’', name: 'Right Single Quote' },
+  { char: '“', name: 'Left Double Quote' },
+  { char: '”', name: 'Right Double Quote' },
+  { char: '†', name: 'Dagger' },
+  { char: '‡', name: 'Double Dagger' },
+  { char: '‰', name: 'Per Mille' },
+  { char: '′', name: 'Prime' },
+  { char: '″', name: 'Double Prime' },
+];
+
+/**
+ * Fonts always offered in the font picker. "(normal text)" inserts with no
+ * explicit font so the symbol inherits the run's font, exactly like Word.
+ */
+export const NORMAL_TEXT_FONT = '';
+const BUILT_IN_SYMBOL_FONTS = [
+  'Arial',
+  'Calibri',
+  'Cambria',
+  'Cambria Math',
+  'Courier New',
+  'Segoe UI Symbol',
+  'Times New Roman',
+  'Wingdings',
+];
+
+const TAB_BAR_STYLE: CSSProperties = {
+  display: 'flex',
+  gap: '4px',
+  padding: '0 20px',
+  borderBottom: '1px solid var(--doc-border)',
+};
+
+const TAB_STYLE: CSSProperties = {
+  padding: '10px 14px',
+  border: 'none',
+  borderBottom: '2px solid transparent',
+  background: 'transparent',
+  color: 'var(--doc-text-muted)',
+  fontSize: '14px',
+  fontWeight: 500,
+  cursor: 'pointer',
+};
+
+const TAB_ACTIVE_STYLE: CSSProperties = {
+  ...TAB_STYLE,
+  color: 'var(--doc-primary)',
+  borderBottomColor: 'var(--doc-primary)',
+};
+
+const FONT_ROW_STYLE: CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px',
+  marginBottom: '12px',
+};
+
+const FONT_SELECT_STYLE: CSSProperties = {
+  flex: 1,
+  padding: '8px 10px',
+  borderRadius: '4px',
+  border: '1px solid var(--doc-border-input)',
+  backgroundColor: 'var(--doc-surface)',
+  color: 'var(--doc-text)',
+  fontSize: '14px',
+};
+
+const SPECIAL_LIST_STYLE: CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '2px',
+  maxHeight: '320px',
+  overflow: 'auto',
+};
+
+const SPECIAL_ROW_STYLE: CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '12px',
+  width: '100%',
+  padding: '8px 10px',
+  border: '1px solid transparent',
+  borderRadius: '4px',
+  background: 'transparent',
+  color: 'var(--doc-text)',
+  cursor: 'pointer',
+  textAlign: 'left',
+};
 
 // ============================================================================
 // MAIN COMPONENT
@@ -612,16 +375,25 @@ export function InsertSymbolDialog({
   onClose,
   onInsert,
   recentSymbols = [],
+  fonts = [],
   className,
   style,
 }: InsertSymbolDialogProps): React.ReactElement | null {
   const { t } = useTranslation();
 
   // State
+  const [activeTab, setActiveTab] = useState<'symbols' | 'special'>('symbols');
+  const [selectedFont, setSelectedFont] = useState<string>(NORMAL_TEXT_FONT);
   const [selectedCategory, setSelectedCategory] = useState('common');
   const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [hoveredSymbol, setHoveredSymbol] = useState<string | null>(null);
+
+  // Merge built-in fonts with document fonts, de-duplicated, sorted.
+  const fontOptions = useMemo(() => {
+    const set = new Set<string>([...BUILT_IN_SYMBOL_FONTS, ...fonts.filter(Boolean)]);
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [fonts]);
 
   // Refs
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -632,6 +404,7 @@ export function InsertSymbolDialog({
       setSelectedSymbol(null);
       setSearchQuery('');
       setHoveredSymbol(null);
+      setActiveTab('symbols');
       setTimeout(() => searchInputRef.current?.focus(), 100);
     }
   }, [isOpen]);
@@ -668,13 +441,14 @@ export function InsertSymbolDialog({
   }, []);
 
   /**
-   * Handle symbol double-click (insert immediately)
+   * Handle symbol double-click (insert immediately). Special characters always
+   * insert with the run's own font; only the Symbols tab honors the font picker.
    */
   const handleSymbolDoubleClick = useCallback(
     (symbol: string) => {
-      onInsert(symbol);
+      onInsert(symbol, activeTab === 'symbols' ? selectedFont || undefined : undefined);
     },
-    [onInsert]
+    [onInsert, activeTab, selectedFont]
   );
 
   /**
@@ -682,9 +456,9 @@ export function InsertSymbolDialog({
    */
   const handleInsert = useCallback(() => {
     if (selectedSymbol) {
-      onInsert(selectedSymbol);
+      onInsert(selectedSymbol, activeTab === 'symbols' ? selectedFont || undefined : undefined);
     }
-  }, [selectedSymbol, onInsert]);
+  }, [selectedSymbol, onInsert, activeTab, selectedFont]);
 
   /**
    * Handle keyboard events
@@ -779,83 +553,185 @@ export function InsertSymbolDialog({
           </button>
         </div>
 
+        {/* Tab bar: Symbols | Special Characters (Word parity) */}
+        <div className="docx-insert-symbol-tabs" style={TAB_BAR_STYLE}>
+          <button
+            type="button"
+            onClick={() => setActiveTab('symbols')}
+            style={activeTab === 'symbols' ? TAB_ACTIVE_STYLE : TAB_STYLE}
+          >
+            {t('dialogs.insertSymbol.tabSymbols')}
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('special')}
+            style={activeTab === 'special' ? TAB_ACTIVE_STYLE : TAB_STYLE}
+          >
+            {t('dialogs.insertSymbol.tabSpecial')}
+          </button>
+        </div>
+
         {/* Body */}
         <div className="docx-insert-symbol-dialog-body" style={DIALOG_BODY_STYLE}>
-          {/* Search */}
-          <input
-            ref={searchInputRef}
-            type="text"
-            placeholder={t('dialogs.insertSymbol.searchPlaceholder')}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={SEARCH_INPUT_STYLE}
-          />
-
-          {/* Category tabs */}
-          {!searchQuery && (
-            <div className="docx-insert-symbol-categories" style={CATEGORY_TABS_STYLE}>
-              {categories.map((cat) => (
-                <button
-                  key={cat.name}
-                  type="button"
-                  onClick={() => setSelectedCategory(cat.name)}
-                  style={
-                    selectedCategory === cat.name ? CATEGORY_TAB_ACTIVE_STYLE : CATEGORY_TAB_STYLE
-                  }
+          {activeTab === 'symbols' ? (
+            <>
+              {/* Font picker — inserts the symbol with the chosen font, like Word */}
+              <div style={FONT_ROW_STYLE}>
+                <label
+                  htmlFor="insert-symbol-font"
+                  style={{ fontSize: '13px', color: 'var(--doc-text-muted)' }}
                 >
-                  {cat.label}
+                  {t('dialogs.insertSymbol.font')}
+                </label>
+                <select
+                  id="insert-symbol-font"
+                  value={selectedFont}
+                  onChange={(e) => setSelectedFont(e.target.value)}
+                  style={FONT_SELECT_STYLE}
+                >
+                  <option value={NORMAL_TEXT_FONT}>{t('dialogs.insertSymbol.normalText')}</option>
+                  {fontOptions.map((font) => (
+                    <option key={font} value={font}>
+                      {font}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Search */}
+              <input
+                ref={searchInputRef}
+                type="text"
+                placeholder={t('dialogs.insertSymbol.searchPlaceholder')}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={SEARCH_INPUT_STYLE}
+              />
+
+              {/* Category tabs */}
+              {!searchQuery && (
+                <div className="docx-insert-symbol-categories" style={CATEGORY_TABS_STYLE}>
+                  {categories.map((cat) => (
+                    <button
+                      key={cat.name}
+                      type="button"
+                      onClick={() => setSelectedCategory(cat.name)}
+                      style={
+                        selectedCategory === cat.name
+                          ? CATEGORY_TAB_ACTIVE_STYLE
+                          : CATEGORY_TAB_STYLE
+                      }
+                    >
+                      {cat.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Symbols grid */}
+              <div className="docx-insert-symbol-grid" style={SYMBOLS_GRID_STYLE}>
+                {filteredSymbols.map((symbol, index) => (
+                  <button
+                    key={`${symbol}-${index}`}
+                    type="button"
+                    onClick={() => handleSymbolClick(symbol)}
+                    onDoubleClick={() => handleSymbolDoubleClick(symbol)}
+                    onMouseEnter={() => setHoveredSymbol(symbol)}
+                    onMouseLeave={() => setHoveredSymbol(null)}
+                    style={{
+                      ...SYMBOL_BUTTON_STYLE,
+                      ...(selectedFont ? { fontFamily: selectedFont } : {}),
+                      ...(selectedSymbol === symbol
+                        ? {
+                            backgroundColor: 'var(--doc-primary-light)',
+                            borderColor: 'var(--doc-primary)',
+                          }
+                        : {}),
+                    }}
+                    title={`${symbol} - U+${symbol.codePointAt(0)?.toString(16).toUpperCase()}`}
+                  >
+                    {symbol}
+                  </button>
+                ))}
+              </div>
+
+              {/* No results */}
+              {filteredSymbols.length === 0 && (
+                <div
+                  style={{ textAlign: 'center', padding: '20px', color: 'var(--doc-text-muted)' }}
+                >
+                  {t('dialogs.insertSymbol.noResults', { query: searchQuery })}
+                </div>
+              )}
+            </>
+          ) : (
+            /* Special Characters tab */
+            <div className="docx-insert-symbol-special" style={SPECIAL_LIST_STYLE}>
+              {SPECIAL_CHARACTERS.map((sc) => (
+                <button
+                  key={sc.name}
+                  type="button"
+                  onClick={() => setSelectedSymbol(sc.char)}
+                  onDoubleClick={() => handleSymbolDoubleClick(sc.char)}
+                  style={{
+                    ...SPECIAL_ROW_STYLE,
+                    ...(selectedSymbol === sc.char
+                      ? {
+                          backgroundColor: 'var(--doc-primary-light)',
+                          borderColor: 'var(--doc-primary)',
+                        }
+                      : {}),
+                  }}
+                >
+                  <span
+                    style={{
+                      width: '32px',
+                      textAlign: 'center',
+                      fontSize: '18px',
+                      border: '1px solid var(--doc-border)',
+                      borderRadius: '4px',
+                      padding: '2px 0',
+                    }}
+                  >
+                    {sc.char}
+                  </span>
+                  <span style={{ flex: 1 }}>{sc.name}</span>
+                  {sc.shortcut && (
+                    <span style={{ fontSize: '12px', color: 'var(--doc-text-muted)' }}>
+                      {sc.shortcut}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
           )}
 
-          {/* Symbols grid */}
-          <div className="docx-insert-symbol-grid" style={SYMBOLS_GRID_STYLE}>
-            {filteredSymbols.map((symbol, index) => (
-              <button
-                key={`${symbol}-${index}`}
-                type="button"
-                onClick={() => handleSymbolClick(symbol)}
-                onDoubleClick={() => handleSymbolDoubleClick(symbol)}
-                onMouseEnter={() => setHoveredSymbol(symbol)}
-                onMouseLeave={() => setHoveredSymbol(null)}
-                style={{
-                  ...SYMBOL_BUTTON_STYLE,
-                  ...(selectedSymbol === symbol
-                    ? {
-                        backgroundColor: 'var(--doc-primary-light)',
-                        borderColor: 'var(--doc-primary)',
-                      }
-                    : {}),
-                }}
-                title={`${symbol} - U+${symbol.codePointAt(0)?.toString(16).toUpperCase()}`}
-              >
-                {symbol}
-              </button>
-            ))}
-          </div>
-
-          {/* No results */}
-          {filteredSymbols.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '20px', color: 'var(--doc-text-muted)' }}>
-              {t('dialogs.insertSymbol.noResults', { query: searchQuery })}
-            </div>
-          )}
-
-          {/* Preview */}
-          {symbolInfo && (
-            <div className="docx-insert-symbol-preview" style={PREVIEW_SECTION_STYLE}>
-              <div style={PREVIEW_SYMBOL_STYLE}>{symbolInfo.character}</div>
-              <div style={PREVIEW_INFO_STYLE}>
-                <div style={{ fontSize: '14px', fontWeight: 500, marginBottom: '4px' }}>
-                  {symbolInfo.codePoint}
+          {/* Preview — the outer wrapper always reserves space so hovering
+              between cells never shifts the grid (which would flicker). */}
+          <div style={PREVIEW_RESERVE_STYLE}>
+            {symbolInfo && (
+              <div className="docx-insert-symbol-preview" style={PREVIEW_SECTION_STYLE}>
+                <div
+                  style={{
+                    ...PREVIEW_SYMBOL_STYLE,
+                    ...(activeTab === 'symbols' && selectedFont
+                      ? { fontFamily: selectedFont }
+                      : {}),
+                  }}
+                >
+                  {symbolInfo.character}
                 </div>
-                <div style={{ fontSize: '12px', color: 'var(--doc-text-muted)' }}>
-                  {t('dialogs.insertSymbol.decimal', { value: symbolInfo.decimal })}
+                <div style={PREVIEW_INFO_STYLE}>
+                  <div style={{ fontSize: '14px', fontWeight: 500, marginBottom: '4px' }}>
+                    {symbolInfo.codePoint}
+                  </div>
+                  <div style={{ fontSize: '12px', color: 'var(--doc-text-muted)' }}>
+                    {t('dialogs.insertSymbol.decimal', { value: symbolInfo.decimal })}
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {/* Footer */}

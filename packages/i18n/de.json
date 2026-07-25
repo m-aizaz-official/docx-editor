@@ -45,7 +45,8 @@
     "watermark": "Wasserzeichen",
     "break": null,
     "sectionBreakContinuous": null,
-    "sectionBreakNextPage": null
+    "sectionBreakNextPage": null,
+    "equation": null
   },
   "formattingBar": {
     "groups": {
@@ -83,7 +84,8 @@
     "imagePropertiesShortcut": "Bildeigenschaften (Alternativtext, Rahmen)...",
     "clearFormatting": "Formatierung löschen",
     "commentsAndChanges": "Kommentare & Änderungen",
-    "moreItems": "{count, plural, one {# weiteres Element} other {# weitere Elemente}}"
+    "moreItems": "{count, plural, one {# weiteres Element} other {# weitere Elemente}}",
+    "formatPainter": null
   },
   "alignment": {
     "alignLeft": "Linksbündig",
@@ -298,7 +300,11 @@
         "emoji": "Emoji"
       },
       "noResultsEmpty": "Keine Symbole gefunden",
-      "recent": "Zuletzt verwendet:"
+      "recent": "Zuletzt verwendet:",
+      "font": null,
+      "normalText": null,
+      "tabSpecial": null,
+      "tabSymbols": null
     },
     "imageProperties": {
       "title": "Bildeigenschaften",
@@ -562,6 +568,12 @@
       "textLabel": "Text",
       "title": "Wasserzeichen",
       "washout": "Auswaschen"
+    },
+    "equation": {
+      "displayMode": null,
+      "gallery": null,
+      "placeholder": null,
+      "title": null
     }
   },
   "comments": {
@@ -610,7 +622,9 @@
       "makeCasual": "Lockerer formulieren",
       "custom": "Benutzerdefiniert"
     },
-    "updateTableOfContents": "Inhaltsverzeichnis aktualisieren"
+    "updateTableOfContents": "Inhaltsverzeichnis aktualisieren",
+    "continueNumbering": null,
+    "restartNumbering": null
   },
   "documentOutline": {
     "ariaLabel": "Dokumentgliederung",

@@ -26,6 +26,7 @@
 
 import type {
   ImageRun,
+  MathRun,
   MeasuredLine,
   ParagraphBlock,
   ParagraphMetrics,
@@ -214,7 +215,8 @@ type Token =
   | { kind: 'space'; pieces: Piece[]; width: number }
   | { kind: 'tab'; runIndex: number; style: FontStyle }
   | { kind: 'break'; runIndex: number }
-  | { kind: 'image'; runIndex: number; run: ImageRun; inFlow: boolean };
+  | { kind: 'image'; runIndex: number; run: ImageRun; inFlow: boolean }
+  | { kind: 'math'; runIndex: number; run: MathRun };
 
 /**
  * Flatten runs into break-opportunity units.
@@ -262,6 +264,14 @@ function tokenise(runs: Run[], defaults: Partial<FontStyle>): Token[] {
         // It still gets a zero-width token, so its document positions stay inside
         // a line's range and remain addressable by the caret.
         tokens.push({ kind: 'image', runIndex, run, inFlow: !isFloatingImageRun(run) });
+        break;
+
+      case 'math':
+        // An equation is an atomic, unbreakable inline box (like an in-flow
+        // image): its measured width advances the pen and its height floors the
+        // line height.
+        closeWord();
+        tokens.push({ kind: 'math', runIndex, run });
         break;
 
       case 'field': {
@@ -643,6 +653,17 @@ function fillLines(
         );
         break;
       }
+
+      case 'math': {
+        const w = token.run.width;
+        makeRoom(w);
+        placeAtomic(line, token.runIndex, 0, 1, w);
+        line.atomAdvances[token.runIndex] = w;
+        // Floor the line height to the equation's box so tall math (fractions,
+        // n-ary operators) never overlaps the lines above/below.
+        line.imageHeight = Math.max(line.imageHeight, token.run.height);
+        break;
+      }
     }
   }
 
@@ -951,7 +972,7 @@ function blankLine(height: number): MeasuredLine {
 // ---------------------------------------------------------------------------
 
 function styleFor(run: Run, defaults: Partial<FontStyle>): FontStyle {
-  if (run.kind === 'image' || run.kind === 'lineBreak') {
+  if (run.kind === 'image' || run.kind === 'lineBreak' || run.kind === 'math') {
     return resolveFontStyle(undefined, defaults);
   }
   return resolveFontStyle(run, defaults);
@@ -984,7 +1005,7 @@ function followingContentWidth(
     const token = tokens[i];
     if (token.kind === 'tab' || token.kind === 'break') break;
 
-    if (token.kind === 'image') {
+    if (token.kind === 'image' || token.kind === 'math') {
       width += token.run.width;
       continue;
     }

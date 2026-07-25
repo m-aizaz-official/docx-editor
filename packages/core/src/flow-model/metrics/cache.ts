@@ -240,6 +240,8 @@ function runKey(run: Run): string {
         round(run.distTop ?? 0),
         round(run.distBottom ?? 0),
       ].join(':');
+    case 'math':
+      return `m:${run.ommlXml}:${round(run.width)}x${round(run.height)}`;
   }
 }
 

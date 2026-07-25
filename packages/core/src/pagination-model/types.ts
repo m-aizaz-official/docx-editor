@@ -14,6 +14,7 @@
  */
 
 import type { CellMarker, RevisionInfo } from '../types/content/trackedChange';
+import type { MathNode } from '../math/ast';
 import type { InlineSdtWidget } from './inlineSdtWidgets';
 import type { FootnoteFragment } from './footnoteTypes';
 import type { TrackedChangeMetadata } from './trackedChangeMetadata';
@@ -332,11 +333,32 @@ export interface ImageRun extends DocRange, TrackedChangeMetadata {
 }
 
 /**
+ * A math equation (`m:oMath`) in the inline stream. `nodes` is the parsed math
+ * AST; `width`/`height` are the measured box extents in px, and `ascent` is the
+ * px from the top of the box down to the text baseline (so the equation aligns
+ * to surrounding text). `ommlXml` is kept for verbatim round-trip on save.
+ *
+ * @public
+ */
+export interface MathRun extends DocRange {
+  kind: 'math';
+  nodes: MathNode[];
+  display: 'inline' | 'block';
+  ommlXml: string;
+  plainText: string;
+  width: number;
+  height: number;
+  ascent: number;
+  /** Base font size (px) the box was measured at; the painter renders to match. */
+  fontSizePx: number;
+}
+
+/**
  * Any inline run.
  *
  * @public
  */
-export type Run = TextRun | TabRun | LineBreakRun | FieldRun | ImageRun;
+export type Run = TextRun | TabRun | LineBreakRun | FieldRun | ImageRun | MathRun;
 
 // ============================================================================
 // Content nodes — the document, geometry-free

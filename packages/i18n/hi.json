@@ -45,7 +45,8 @@
     "watermark": "वॉटरमार्क",
     "break": null,
     "sectionBreakContinuous": null,
-    "sectionBreakNextPage": null
+    "sectionBreakNextPage": null,
+    "equation": null
   },
   "formattingBar": {
     "groups": {
@@ -83,7 +84,8 @@
     "imagePropertiesShortcut": "चित्र की विशेषताएँ (ऑल्ट टेक्स्ट, बॉर्डर)...",
     "clearFormatting": "प्रारूपण साफ करें",
     "commentsAndChanges": null,
-    "moreItems": null
+    "moreItems": null,
+    "formatPainter": null
   },
   "alignment": {
     "alignLeft": "बाएं संरेखित करें",
@@ -298,7 +300,11 @@
         "currency": "मुद्रा",
         "music": "संगीत",
         "emoji": "इमोजी"
-      }
+      },
+      "font": null,
+      "normalText": null,
+      "tabSpecial": null,
+      "tabSymbols": null
     },
     "imageProperties": {
       "title": "चित्र की विशेषताएँ",
@@ -562,6 +568,12 @@
       "textLabel": "टेक्स्ट",
       "title": "वॉटरमार्क",
       "washout": "धुंधला"
+    },
+    "equation": {
+      "displayMode": null,
+      "gallery": null,
+      "placeholder": null,
+      "title": null
     }
   },
   "comments": {
@@ -610,7 +622,9 @@
       "makeCasual": "अनौपचारिक बनाएं",
       "custom": "कस्टम"
     },
-    "updateTableOfContents": "विषय-सूची अपडेट करें"
+    "updateTableOfContents": "विषय-सूची अपडेट करें",
+    "continueNumbering": null,
+    "restartNumbering": null
   },
   "documentOutline": {
     "ariaLabel": "दस्तावेज़ की रूपरेखा",

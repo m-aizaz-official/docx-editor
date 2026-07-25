@@ -43,6 +43,7 @@
     "sectionBreakContinuous": "Section break (continuous)",
     "tableOfContents": "Table of contents",
     "symbol": "Symbol",
+    "equation": "Equation",
     "watermark": "Watermark",
     "help": "Help",
     "reportIssue": "Report issue"
@@ -74,6 +75,7 @@
     "underline": "Underline",
     "underlineShortcut": "Underline (Ctrl+U)",
     "strikethrough": "Strikethrough",
+    "formatPainter": "Format Painter (double-click to keep on)",
     "fontColor": "Font Color",
     "highlightColor": "Text Highlight Color",
     "insertLink": "Insert link",
@@ -307,6 +309,10 @@
     },
     "insertSymbol": {
       "title": "Insert Symbol",
+      "tabSymbols": "Symbols",
+      "tabSpecial": "Special Characters",
+      "font": "Font:",
+      "normalText": "(normal text)",
       "searchPlaceholder": "Search symbols (character or Unicode)...",
       "noResultsEmpty": "No symbols found",
       "noResults": "No symbols found for \"{query}\"",
@@ -323,6 +329,12 @@
         "music": "Music",
         "emoji": "Emoji"
       }
+    },
+    "equation": {
+      "title": "Insert Equation",
+      "placeholder": "Type an equation, e.g. x=\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}",
+      "gallery": "Gallery",
+      "displayMode": "Display equation (own line)"
     },
     "imageProperties": {
       "title": "Image Properties",
@@ -617,6 +629,8 @@
     "updateTableOfContents": "Update table of contents",
     "selectAll": "Select All",
     "selectAllShortcut": "Ctrl+A",
+    "restartNumbering": "Restart numbering at 1",
+    "continueNumbering": "Continue numbering",
     "selected": "Selected:",
     "aiActions": {
       "askAi": "Ask AI",

@@ -32,8 +32,15 @@
 
   <InsertSymbolDialog
     :is-open="showInsertSymbol"
+    :fonts="symbolFonts"
     @close="emit('update:showInsertSymbol', false)"
-    @insert="(symbol) => emit('insert-symbol', symbol)"
+    @insert="(symbol, font) => emit('insert-symbol', symbol, font)"
+  />
+
+  <EquationDialog
+    :is-open="showInsertEquation"
+    @close="emit('update:showInsertEquation', false)"
+    @insert="(linear, display) => emit('insert-equation', linear, display)"
   />
 
   <ImagePropertiesDialog
@@ -70,6 +77,7 @@ import type { SectionProperties, Watermark } from '@docx-editor.dev/core/types/d
 import FindReplaceDialog from '../dialogs/FindReplaceDialog.vue';
 import HyperlinkDialog from '../dialogs/HyperlinkDialog.vue';
 import InsertSymbolDialog from '../dialogs/InsertSymbolDialog.vue';
+import EquationDialog from '../dialogs/EquationDialog.vue';
 import ImagePropertiesDialog from '../dialogs/ImagePropertiesDialog.vue';
 import PageSetupDialog from '../dialogs/PageSetupDialog.vue';
 import WatermarkDialog from '../dialogs/WatermarkDialog.vue';
@@ -96,6 +104,8 @@ defineProps<{
   showFindReplace: boolean;
   showHyperlink: boolean;
   showInsertSymbol: boolean;
+  symbolFonts?: string[];
+  showInsertEquation: boolean;
   showImageProperties: boolean;
   showPageSetup: boolean;
   showWatermark: boolean;
@@ -108,11 +118,13 @@ const emit = defineEmits<{
   (e: 'update:showFindReplace', value: boolean): void;
   (e: 'update:showHyperlink', value: boolean): void;
   (e: 'update:showInsertSymbol', value: boolean): void;
+  (e: 'update:showInsertEquation', value: boolean): void;
   (e: 'update:showImageProperties', value: boolean): void;
   (e: 'update:showPageSetup', value: boolean): void;
   (e: 'update:showWatermark', value: boolean): void;
   (e: 'update:showKeyboardShortcuts', value: boolean): void;
-  (e: 'insert-symbol', symbol: string): void;
+  (e: 'insert-symbol', symbol: string, font?: string): void;
+  (e: 'insert-equation', linear: string, display: 'inline' | 'block'): void;
   (e: 'hyperlink-submit', data: HyperlinkSubmitPayload): void;
   (e: 'hyperlink-remove'): void;
   (e: 'page-setup-apply', props: Partial<SectionProperties>): void;

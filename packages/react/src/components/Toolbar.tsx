@@ -123,6 +123,12 @@ export interface ToolbarProps {
   currentFormatting?: SelectionFormatting;
   /** Callback when a formatting action is triggered */
   onFormat?: (action: FormattingAction) => void;
+  /** Format Painter: arm to copy the selection's formatting onto the next selection. */
+  onFormatPainter?: () => void;
+  /** Format Painter sticky mode (double-click): stays armed until dismissed. */
+  onFormatPainterSticky?: () => void;
+  /** Whether Format Painter is currently armed (button shown active). */
+  formatPainterActive?: boolean;
   /** Callback for undo action */
   onUndo?: () => void;
   /** Callback for redo action */
@@ -208,6 +214,10 @@ export interface ToolbarProps {
   onInsertSectionBreakContinuous?: () => void;
   /** Callback when user wants to insert a table of contents */
   onInsertTOC?: () => void;
+  /** Callback when user wants to insert a symbol/special character */
+  onInsertSymbol?: () => void;
+  /** Callback when user wants to insert a math equation */
+  onInsertEquation?: () => void;
   /** Callback when user wants to insert a shape */
   onInsertShape?: (data: {
     shapeType: string;
@@ -260,6 +270,8 @@ export interface ToolbarButtonProps {
   title?: string;
   /** Click handler */
   onClick?: () => void;
+  /** Double-click handler (e.g. Format Painter sticky mode) */
+  onDoubleClick?: () => void;
   /** Button content */
   children: ReactNode;
   /** Additional CSS class name */
@@ -292,6 +304,7 @@ export function ToolbarButton({
   disabled = false,
   title,
   onClick,
+  onDoubleClick,
   children,
   className,
   ariaLabel,
@@ -324,6 +337,7 @@ export function ToolbarButton({
       data-active={active ? 'true' : undefined}
       onMouseDown={handleMouseDown}
       onClick={disabled ? undefined : onClick}
+      onDoubleClick={disabled ? undefined : onDoubleClick}
       disabled={disabled}
       aria-pressed={active ? true : false}
       aria-label={ariaLabel || title}
@@ -402,6 +416,9 @@ export function Toolbar(explicitProps: ToolbarProps) {
   const {
     currentFormatting = {},
     onFormat,
+    onFormatPainter,
+    onFormatPainterSticky,
+    formatPainterActive = false,
     onUndo,
     onRedo,
     canUndo = false,
@@ -797,6 +814,18 @@ export function Toolbar(explicitProps: ToolbarProps) {
         >
           <MaterialSymbol name="strikethrough_s" size={ICON_SIZE} />
         </ToolbarButton>
+        {(onFormatPainter || onFormatPainterSticky) && (
+          <ToolbarButton
+            onClick={onFormatPainter}
+            onDoubleClick={onFormatPainterSticky}
+            active={formatPainterActive}
+            disabled={disabled}
+            title={t('formattingBar.formatPainter')}
+            ariaLabel={t('formattingBar.formatPainter')}
+          >
+            <MaterialSymbol name="format_paint" size={ICON_SIZE} />
+          </ToolbarButton>
+        )}
         {showTextColorPicker && (
           <ColorPicker
             mode="text"

@@ -53,6 +53,8 @@ import { type PrintOptions } from './ui/PrintPreview';
 // Dialog hooks and utilities (static imports — lightweight, no UI)
 import { useFindReplace } from './dialogs/FindReplaceDialog';
 import { useHyperlinkDialog } from './dialogs/HyperlinkDialog';
+import { useInsertContentActions } from './DocxEditor/hooks/useInsertContentActions';
+import { useFormatPainter } from './DocxEditor/hooks/useFormatPainter';
 import { type InlineHeaderFooterEditorRef } from './InlineHeaderFooterEditor';
 import { DocumentAgent } from '@docx-editor.dev/core/agent';
 import { DefaultLoadingIndicator, DefaultPlaceholder, ParseError } from './DocxEditorHelpers';
@@ -863,6 +865,21 @@ export const DocxEditor = forwardRef<DocxEditorRef, DocxEditorProps>(function Do
 
   // Hyperlink dialog hook
   const hyperlinkDialog = useHyperlinkDialog();
+
+  // Insert Symbol + Equation dialogs and their insert transactions.
+  const { symbolDialog, handleSymbolInsert, equationDialog, handleEquationInsert, symbolFonts } =
+    useInsertContentActions({
+      getActiveEditorView,
+      focusActiveEditor,
+      documentFonts,
+      fontFamilies,
+    });
+
+  // Format Painter — copy the selection's formatting, paint it onto the next.
+  const { formatPainterArmed, armFormatPainter } = useFormatPainter({
+    getActiveEditorView,
+    focusActiveEditor,
+  });
 
   // Lifted out of useDocumentLoader / useCommentLifecycle so `resetForNewDocument`
   // (declared next) can clear both on every fresh load.
@@ -1817,6 +1834,11 @@ export const DocxEditor = forwardRef<DocxEditorRef, DocxEditorProps>(function Do
             onInsertSectionBreakNextPage={handleInsertSectionBreakNextPage}
             onInsertSectionBreakContinuous={handleInsertSectionBreakContinuous}
             onInsertTOC={handleInsertTOC}
+            onInsertSymbol={symbolDialog.open}
+            onInsertEquation={() => equationDialog.open()}
+            onFormatPainter={() => armFormatPainter(false)}
+            onFormatPainterSticky={() => armFormatPainter(true)}
+            formatPainterActive={formatPainterArmed}
             onImageWrapType={handleImageWrapType}
             onImageTransform={handleImageTransform}
             onOpenImageProperties={handleOpenImageProperties}
@@ -1939,6 +1961,11 @@ export const DocxEditor = forwardRef<DocxEditorRef, DocxEditorProps>(function Do
           hyperlinkDialog={hyperlinkDialog}
           onHyperlinkSubmit={handleHyperlinkSubmit}
           onHyperlinkRemove={handleHyperlinkRemove}
+          symbolDialog={symbolDialog}
+          onSymbolInsert={handleSymbolInsert}
+          symbolFonts={symbolFonts}
+          equationDialog={equationDialog}
+          onEquationInsert={handleEquationInsert}
           tablePropsOpen={tablePropsOpen}
           onTablePropsClose={() => setTablePropsOpen(false)}
           pmTableContext={state.pmTableContext}

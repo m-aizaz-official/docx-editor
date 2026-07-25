@@ -45,7 +45,8 @@
     "symbol": "Simbol",
     "watermark": "Tanda Air",
     "help": "Bantuan",
-    "reportIssue": "Laporkan Masalah"
+    "reportIssue": "Laporkan Masalah",
+    "equation": null
   },
   "formattingBar": {
     "groups": {
@@ -83,7 +84,8 @@
     "imagePropertiesShortcut": "Properti gambar (alt text, border)...",
     "clearFormatting": "Hapus Pemformatan",
     "commentsAndChanges": "Komentar & Perubahan",
-    "moreItems": "{count} item lainnya"
+    "moreItems": "{count} item lainnya",
+    "formatPainter": null
   },
   "alignment": {
     "alignLeft": "Rata Kiri",
@@ -319,7 +321,11 @@
         "currency": "Mata uang",
         "music": "Musik",
         "emoji": "Emoji"
-      }
+      },
+      "font": null,
+      "normalText": null,
+      "tabSpecial": null,
+      "tabSymbols": null
     },
     "imageProperties": {
       "title": "Properti gambar",
@@ -562,6 +568,12 @@
       "noResults": "Tidak ada pintasan yang cocok dengan \"{query}\"",
       "pressEscToClose": "Tekan {key} untuk menutup",
       "or": "atau"
+    },
+    "equation": {
+      "displayMode": null,
+      "gallery": null,
+      "placeholder": null,
+      "title": null
     }
   },
   "comments": {
@@ -626,7 +638,9 @@
       "makeCasual": "Jadikan Santai",
       "custom": "Kustom"
     },
-    "updateTableOfContents": "Perbarui daftar isi"
+    "updateTableOfContents": "Perbarui daftar isi",
+    "continueNumbering": null,
+    "restartNumbering": null
   },
   "documentOutline": {
     "ariaLabel": "Struktur dokumen",

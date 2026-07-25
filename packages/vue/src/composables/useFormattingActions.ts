@@ -24,6 +24,7 @@ import {
   type ApplyFormattingOptions,
   type InsertBreakOptions,
 } from '@docx-editor.dev/core/prosemirror/applyFormatting';
+import { mathAttrsFromLinear } from '@docx-editor.dev/core/math';
 
 export interface UseFormattingActionsOptions {
   editorView: Ref<EditorView | null>;
@@ -90,12 +91,29 @@ export function useFormattingActions(opts: UseFormattingActionsOptions) {
     view.focus();
   }
 
-  function handleInsertSymbol(symbol: string) {
+  function handleInsertSymbol(symbol: string, font?: string) {
     const view = targetView();
     if (!view) return;
     const { from } = view.state.selection;
-    const tr = view.state.tr.insertText(symbol, from);
+    let tr = view.state.tr.insertText(symbol, from);
+    // Word inserts a symbol carrying its picked font (rFonts) — apply a
+    // fontFamily mark over the inserted range when a specific font is chosen.
+    const fontMark = view.state.schema.marks.fontFamily;
+    if (font && fontMark) {
+      tr = tr.addMark(from, from + symbol.length, fontMark.create({ ascii: font, hAnsi: font }));
+    }
     view.dispatch(tr.scrollIntoView());
+    view.focus();
+  }
+
+  function handleInsertEquation(linear: string, display: 'inline' | 'block') {
+    const view = targetView();
+    if (!view) return;
+    const mathType = view.state.schema.nodes.math;
+    if (!mathType) return;
+    const attrs = mathAttrsFromLinear(linear, display);
+    const node = mathType.create(attrs);
+    view.dispatch(view.state.tr.replaceSelectionWith(node, false).scrollIntoView());
     view.focus();
   }
 
@@ -127,6 +145,7 @@ export function useFormattingActions(opts: UseFormattingActionsOptions) {
     handleInsertSectionBreakNextPage,
     handleInsertSectionBreakContinuous,
     handleInsertSymbol,
+    handleInsertEquation,
     applyFormatting,
     setParagraphStyle,
     insertBreak,

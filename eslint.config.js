@@ -183,7 +183,7 @@ export default [
       'packages/vue/src/components/DocxEditor.vue',
     ],
     rules: {
-      'max-lines': ['error', { max: 2000, skipBlankLines: false, skipComments: false }],
+      'max-lines': ['error', { max: 2050, skipBlankLines: false, skipComments: false }],
     },
   },
 
@@ -206,7 +206,7 @@ export default [
   {
     files: ['packages/core/src/pagination-model/types.ts'],
     rules: {
-      'max-lines': ['error', { max: 1085, skipBlankLines: false, skipComments: false }],
+      'max-lines': ['error', { max: 1100, skipBlankLines: false, skipComments: false }],
     },
   },
 
@@ -218,6 +218,14 @@ export default [
     files: ['packages/core/src/painter-model/renderTable.ts'],
     rules: {
       'max-lines': ['error', { max: 1040, skipBlankLines: false, skipComments: false }],
+    },
+  },
+  {
+    // Icons.tsx is the inline-SVG icon registry — one component per glyph, so it
+    // grows as features add toolbar/menu icons. The cap keeps a ceiling.
+    files: ['packages/react/src/components/ui/Icons.tsx'],
+    rules: {
+      'max-lines': ['error', { max: 1100, skipBlankLines: false, skipComments: false }],
     },
   },
 
@@ -236,7 +244,7 @@ export default [
   {
     files: ['packages/vue/src/components/DocxEditor.vue'],
     rules: {
-      'max-lines': ['error', { max: 1210, skipBlankLines: false, skipComments: false }],
+      'max-lines': ['error', { max: 1290, skipBlankLines: false, skipComments: false }],
     },
   },
 

@@ -45,7 +45,8 @@
     "watermark": "Znak wodny",
     "break": null,
     "sectionBreakContinuous": null,
-    "sectionBreakNextPage": null
+    "sectionBreakNextPage": null,
+    "equation": null
   },
   "formattingBar": {
     "groups": {
@@ -83,7 +84,8 @@
     "imagePropertiesShortcut": "Właściwości obrazu (tekst alternatywny, obramowanie)...",
     "clearFormatting": "Wyczyść formatowanie",
     "commentsAndChanges": null,
-    "moreItems": null
+    "moreItems": null,
+    "formatPainter": null
   },
   "alignment": {
     "alignLeft": "Wyrównaj do lewej",
@@ -298,7 +300,11 @@
         "emoji": "Emoji"
       },
       "noResultsEmpty": "Nie znaleziono symboli",
-      "recent": "Ostatnio używane:"
+      "recent": "Ostatnio używane:",
+      "font": null,
+      "normalText": null,
+      "tabSpecial": null,
+      "tabSymbols": null
     },
     "imageProperties": {
       "title": "Właściwości obrazu",
@@ -562,6 +568,12 @@
       "textLabel": "Tekst",
       "title": "Znak wodny",
       "washout": "Wyblakły"
+    },
+    "equation": {
+      "displayMode": null,
+      "gallery": null,
+      "placeholder": null,
+      "title": null
     }
   },
   "comments": {
@@ -610,7 +622,9 @@
       "makeCasual": "Zmień na potoczny",
       "custom": "Własne"
     },
-    "updateTableOfContents": "Zaktualizuj spis treści"
+    "updateTableOfContents": "Zaktualizuj spis treści",
+    "continueNumbering": null,
+    "restartNumbering": null
   },
   "documentOutline": {
     "ariaLabel": "Konspekt dokumentu",

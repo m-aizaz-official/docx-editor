@@ -10,6 +10,8 @@ import { setTableProperties } from '@docx-editor.dev/core/prosemirror/commands';
 import type { EditorView } from 'prosemirror-view';
 import type { useFindReplace } from '../../hooks/useFindReplace';
 import type { useHyperlinkDialog, HyperlinkData } from '../dialogs/HyperlinkDialog';
+import type { useInsertSymbolDialog } from '../dialogs/InsertSymbolDialog';
+import type { useEquationDialog } from '../dialogs/EquationDialog';
 import type { FindMatch, FindOptions, FindResult } from '../dialogs/FindReplaceDialog';
 import type { ImagePositionData } from '../dialogs/ImagePositionDialog';
 import type { ImagePropertiesData } from '../dialogs/ImagePropertiesDialog';
@@ -19,6 +21,12 @@ import type { ImagePropertiesData } from '../dialogs/ImagePropertiesDialog';
 // module load, so co-locating with the JSX keeps the code-split boundary.
 const FindReplaceDialog = lazy(() => import('../dialogs/FindReplaceDialog'));
 const HyperlinkDialog = lazy(() => import('../dialogs/HyperlinkDialog'));
+const InsertSymbolDialog = lazy(() =>
+  import('../dialogs/InsertSymbolDialog').then((m) => ({ default: m.InsertSymbolDialog }))
+);
+const EquationDialog = lazy(() =>
+  import('../dialogs/EquationDialog').then((m) => ({ default: m.EquationDialog }))
+);
 const TablePropertiesDialog = lazy(() =>
   import('../dialogs/TablePropertiesDialog').then((m) => ({ default: m.TablePropertiesDialog }))
 );
@@ -75,6 +83,11 @@ export function DocxEditorDialogs({
   hyperlinkDialog,
   onHyperlinkSubmit,
   onHyperlinkRemove,
+  symbolDialog,
+  onSymbolInsert,
+  symbolFonts,
+  equationDialog,
+  onEquationInsert,
   tablePropsOpen,
   onTablePropsClose,
   pmTableContext,
@@ -114,6 +127,13 @@ export function DocxEditorDialogs({
   hyperlinkDialog: ReturnType<typeof useHyperlinkDialog>;
   onHyperlinkSubmit: (data: HyperlinkData) => void;
   onHyperlinkRemove: () => void;
+  // Insert symbol
+  symbolDialog: ReturnType<typeof useInsertSymbolDialog>;
+  onSymbolInsert: (symbol: string, font?: string) => void;
+  symbolFonts: string[];
+  // Insert equation
+  equationDialog: ReturnType<typeof useEquationDialog>;
+  onEquationInsert: (linear: string, display: 'inline' | 'block') => void;
   // Table properties
   tablePropsOpen: boolean;
   onTablePropsClose: () => void;
@@ -172,6 +192,23 @@ export function DocxEditorDialogs({
           initialData={hyperlinkDialog.state.initialData}
           selectedText={hyperlinkDialog.state.selectedText}
           isEditing={hyperlinkDialog.state.isEditing}
+        />
+      )}
+      {symbolDialog.isOpen && (
+        <InsertSymbolDialog
+          isOpen={symbolDialog.isOpen}
+          onClose={symbolDialog.close}
+          onInsert={onSymbolInsert}
+          recentSymbols={symbolDialog.recentSymbols}
+          fonts={symbolFonts}
+        />
+      )}
+      {equationDialog.isOpen && (
+        <EquationDialog
+          isOpen={equationDialog.isOpen}
+          onClose={equationDialog.close}
+          onInsert={onEquationInsert}
+          initialLinear={equationDialog.initialLinear}
         />
       )}
       {tablePropsOpen && (

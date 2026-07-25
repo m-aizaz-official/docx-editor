@@ -24,6 +24,7 @@ export interface UseMenuActionsOptions {
   showWatermark: Ref<boolean>;
   showHyperlink: Ref<boolean>;
   showInsertSymbol: Ref<boolean>;
+  showInsertEquation: Ref<boolean>;
   showKeyboardShortcuts: Ref<boolean>;
   handleClearFormatting: () => void;
   handleInsertPageBreak: () => void;
@@ -85,6 +86,9 @@ export function useMenuActions(opts: UseMenuActionsOptions) {
         break;
       case 'insertSymbol':
         opts.showInsertSymbol.value = true;
+        break;
+      case 'insertEquation':
+        opts.showInsertEquation.value = true;
         break;
       case 'insertPageBreak':
         opts.handleInsertPageBreak();

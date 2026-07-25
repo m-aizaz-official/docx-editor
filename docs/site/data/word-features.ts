@@ -151,12 +151,12 @@ export const wordFeatures: WordFeature[] = [
     id: 'text.math',
     name: 'Math equations (OMML)',
     category: 'text',
-    editing: 'none',
+    editing: 'partial',
     rendering: 'partial',
     roundTrip: 'full',
     tier: 'community',
     notes:
-      'Equations round-trip verbatim (raw OMML) and show a styled text fallback. Laid-out math and equation editing are not built yet.',
+      'Insert or edit equations via a linear (LaTeX-style) editor with a live preview, structure palette, and gallery. Equations render as laid-out math (fractions, scripts, radicals, n-ary operators, delimiters, matrices) and round-trip as OMML. Rendering targets visual closeness to Word, not glyph-exact parity.',
   },
   {
     id: 'text.symbols',

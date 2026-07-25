@@ -94,6 +94,8 @@ const insertItems = computed<MenuEntry[]>(() => [
   { type: 'separator' },
   { icon: 'page_break', label: t('toolbar.break'), key: 'break', submenu: true },
   { icon: 'format_list_numbered', label: t('toolbar.tableOfContents'), onClick: act('insertTOC') },
+  { icon: 'emoji_symbols', label: t('toolbar.symbol'), onClick: act('insertSymbol') },
+  { icon: 'functions', label: t('toolbar.equation'), onClick: act('insertEquation') },
   { icon: 'branding_watermark', label: t('toolbar.watermark'), onClick: act('watermark') },
 ]);
 

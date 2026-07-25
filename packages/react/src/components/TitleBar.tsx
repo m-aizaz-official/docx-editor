@@ -187,6 +187,8 @@ export function MenuBar() {
     onInsertSectionBreakNextPage,
     onInsertSectionBreakContinuous,
     onInsertTOC,
+    onInsertSymbol,
+    onInsertEquation,
     onWatermark,
     onRefocusEditor,
   } = ctx;
@@ -343,6 +345,18 @@ export function MenuBar() {
             label: t('toolbar.tableOfContents'),
             onClick: onInsertTOC,
             disabled: !onInsertTOC,
+          },
+          {
+            icon: 'emoji_symbols',
+            label: t('toolbar.symbol'),
+            onClick: onInsertSymbol,
+            disabled: !onInsertSymbol,
+          },
+          {
+            icon: 'functions',
+            label: t('toolbar.equation'),
+            onClick: onInsertEquation,
+            disabled: !onInsertEquation,
           },
           ...(onWatermark
             ? [

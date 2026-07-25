@@ -45,7 +45,8 @@
     "watermark": "水印",
     "break": null,
     "sectionBreakContinuous": null,
-    "sectionBreakNextPage": null
+    "sectionBreakNextPage": null,
+    "equation": null
   },
   "formattingBar": {
     "groups": {
@@ -83,7 +84,8 @@
     "imagePropertiesShortcut": "图片属性(替代文本、边框)...",
     "clearFormatting": "清除格式",
     "commentsAndChanges": null,
-    "moreItems": null
+    "moreItems": null,
+    "formatPainter": null
   },
   "alignment": {
     "alignLeft": "左对齐",
@@ -298,7 +300,11 @@
         "emoji": "Emoji"
       },
       "noResultsEmpty": "未找到符号",
-      "recent": "最近使用:"
+      "recent": "最近使用:",
+      "font": null,
+      "normalText": null,
+      "tabSpecial": null,
+      "tabSymbols": null
     },
     "imageProperties": {
       "title": "图片属性",
@@ -562,6 +568,12 @@
       "textLabel": "文字",
       "title": "水印",
       "washout": "冲蚀"
+    },
+    "equation": {
+      "displayMode": null,
+      "gallery": null,
+      "placeholder": null,
+      "title": null
     }
   },
   "comments": {
@@ -610,7 +622,9 @@
       "makeCasual": "口语化",
       "custom": "自定义"
     },
-    "updateTableOfContents": "更新目录"
+    "updateTableOfContents": "更新目录",
+    "continueNumbering": null,
+    "restartNumbering": null
   },
   "documentOutline": {
     "ariaLabel": "文档大纲",

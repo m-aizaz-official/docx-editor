@@ -59,6 +59,11 @@ function renderToolbar({ showHelpMenu }: { showHelpMenu: boolean }) {
       onInsertSectionBreakNextPage={noop}
       onInsertSectionBreakContinuous={noop}
       onInsertTOC={noop}
+      onInsertSymbol={noop}
+      onInsertEquation={noop}
+      onFormatPainter={noop}
+      onFormatPainterSticky={noop}
+      formatPainterActive={false}
       onImageWrapType={noop}
       onImageTransform={noop}
       onOpenImageProperties={noop}

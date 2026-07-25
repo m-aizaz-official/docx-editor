@@ -88,6 +88,11 @@ export function DocxEditorToolbar({
   onInsertSectionBreakNextPage,
   onInsertSectionBreakContinuous,
   onInsertTOC,
+  onInsertSymbol,
+  onInsertEquation,
+  onFormatPainter,
+  onFormatPainterSticky,
+  formatPainterActive,
   onImageWrapType,
   onImageTransform,
   onOpenImageProperties,
@@ -137,6 +142,11 @@ export function DocxEditorToolbar({
   onInsertSectionBreakNextPage: () => void;
   onInsertSectionBreakContinuous: () => void;
   onInsertTOC: () => void;
+  onInsertSymbol: () => void;
+  onInsertEquation: () => void;
+  onFormatPainter: () => void;
+  onFormatPainterSticky: () => void;
+  formatPainterActive: boolean;
   onImageWrapType: (value: string) => void;
   onImageTransform: (action: 'rotateCW' | 'rotateCCW' | 'flipH' | 'flipV') => void;
   onOpenImageProperties: () => void;
@@ -181,6 +191,11 @@ export function DocxEditorToolbar({
         onInsertSectionBreakNextPage={onInsertSectionBreakNextPage}
         onInsertSectionBreakContinuous={onInsertSectionBreakContinuous}
         onInsertTOC={onInsertTOC}
+        onInsertSymbol={onInsertSymbol}
+        onInsertEquation={onInsertEquation}
+        onFormatPainter={onFormatPainter}
+        onFormatPainterSticky={onFormatPainterSticky}
+        formatPainterActive={formatPainterActive}
         imageContext={imageContext}
         onImageWrapType={onImageWrapType}
         onImageTransform={onImageTransform}

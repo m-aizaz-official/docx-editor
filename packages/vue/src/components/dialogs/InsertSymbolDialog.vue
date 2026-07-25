@@ -5,28 +5,57 @@
         <span class="dialog__title">{{ t('dialogs.insertSymbol.title') }}</span>
         <button class="dialog__close" :title="t('common.closeDialog')" @click="close">✕</button>
       </div>
-      <div class="dialog__body">
-        <!-- Search -->
-        <input
-          ref="searchRef"
-          v-model="search"
-          class="symbol-search"
-          :placeholder="t('dialogs.insertSymbol.searchPlaceholder')"
-          @keydown.escape="close"
-        />
 
-        <!-- Category tabs -->
-        <div v-if="!search" class="symbol-tabs">
-          <button
-            v-for="cat in categories"
-            :key="cat.name"
-            class="symbol-tab"
-            :class="{ active: activeCategory === cat.name }"
-            @mousedown.prevent="activeCategory = cat.name"
-          >
-            {{ t(cat.nameKey) }}
-          </button>
-        </div>
+      <!-- Tab bar: Symbols | Special Characters -->
+      <div class="symbol-tabbar">
+        <button
+          class="symbol-toptab"
+          :class="{ active: activeTab === 'symbols' }"
+          @mousedown.prevent="activeTab = 'symbols'"
+        >
+          {{ t('dialogs.insertSymbol.tabSymbols') }}
+        </button>
+        <button
+          class="symbol-toptab"
+          :class="{ active: activeTab === 'special' }"
+          @mousedown.prevent="activeTab = 'special'"
+        >
+          {{ t('dialogs.insertSymbol.tabSpecial') }}
+        </button>
+      </div>
+
+      <div class="dialog__body">
+        <template v-if="activeTab === 'symbols'">
+          <!-- Font picker -->
+          <div class="symbol-fontrow">
+            <label for="vue-insert-symbol-font">{{ t('dialogs.insertSymbol.font') }}</label>
+            <select id="vue-insert-symbol-font" v-model="selectedFont" class="symbol-fontselect">
+              <option value="">{{ t('dialogs.insertSymbol.normalText') }}</option>
+              <option v-for="f in fontOptions" :key="f" :value="f">{{ f }}</option>
+            </select>
+          </div>
+
+          <!-- Search -->
+          <input
+            ref="searchRef"
+            v-model="search"
+            class="symbol-search"
+            :placeholder="t('dialogs.insertSymbol.searchPlaceholder')"
+            @keydown.escape="close"
+          />
+
+          <!-- Category tabs -->
+          <div v-if="!search" class="symbol-tabs">
+            <button
+              v-for="cat in categories"
+              :key="cat.name"
+              class="symbol-tab"
+              :class="{ active: activeCategory === cat.name }"
+              @mousedown.prevent="activeCategory = cat.name"
+            >
+              {{ t(cat.nameKey) }}
+            </button>
+          </div>
 
         <!-- Symbol grid -->
         <div class="symbol-grid">
@@ -36,6 +65,7 @@
             class="symbol-cell"
             :class="{ selected: selectedSymbol === sym.char }"
             :title="sym.name"
+            :style="selectedFont ? { fontFamily: selectedFont } : {}"
             @click="selectedSymbol = sym.char"
             @dblclick="insertSymbol(sym.char)"
           >
@@ -50,28 +80,55 @@
           </div>
         </div>
 
-        <!-- Preview & info -->
-        <div v-if="selectedSymbol" class="symbol-preview">
-          <span class="symbol-preview__char">{{ selectedSymbol }}</span>
-          <span class="symbol-preview__info"
-            >U+{{
-              selectedSymbol.codePointAt(0)?.toString(16).toUpperCase().padStart(4, '0')
-            }}</span
-          >
-        </div>
+          <!-- Recent -->
+          <div v-if="recentSymbols.length > 0 && !search" class="symbol-recent">
+            <div class="symbol-recent__label">{{ t('dialogs.insertSymbol.recent') }}</div>
+            <button
+              v-for="s in recentSymbols"
+              :key="s"
+              class="symbol-cell symbol-cell--small"
+              @dblclick="insertSymbol(s)"
+              @click="selectedSymbol = s"
+            >
+              {{ s }}
+            </button>
+          </div>
+        </template>
 
-        <!-- Recent -->
-        <div v-if="recentSymbols.length > 0 && !search" class="symbol-recent">
-          <div class="symbol-recent__label">{{ t('dialogs.insertSymbol.recent') }}</div>
-          <button
-            v-for="s in recentSymbols"
-            :key="s"
-            class="symbol-cell symbol-cell--small"
-            @dblclick="insertSymbol(s)"
-            @click="selectedSymbol = s"
-          >
-            {{ s }}
-          </button>
+        <!-- Special Characters tab -->
+        <template v-else>
+          <div class="symbol-special">
+            <button
+              v-for="sc in specialCharacters"
+              :key="sc.name"
+              class="symbol-special__row"
+              :class="{ selected: selectedSymbol === sc.char }"
+              @click="selectedSymbol = sc.char"
+              @dblclick="insertSymbol(sc.char)"
+            >
+              <span class="symbol-special__char">{{ sc.char }}</span>
+              <span class="symbol-special__name">{{ sc.name }}</span>
+              <span v-if="sc.shortcut" class="symbol-special__shortcut">{{ sc.shortcut }}</span>
+            </button>
+          </div>
+        </template>
+
+        <!-- Preview & info (shared). The wrapper always reserves space so
+             selecting a symbol never shifts the list above it (which would make
+             a double-click land on the wrong row). -->
+        <div class="symbol-preview-reserve">
+          <div v-if="selectedSymbol" class="symbol-preview">
+            <span
+              class="symbol-preview__char"
+              :style="activeTab === 'symbols' && selectedFont ? { fontFamily: selectedFont } : {}"
+              >{{ selectedSymbol }}</span
+            >
+            <span class="symbol-preview__info"
+              >U+{{
+                selectedSymbol.codePointAt(0)?.toString(16).toUpperCase().padStart(4, '0')
+              }}</span
+            >
+          </div>
         </div>
 
         <div class="dialog__actions">
@@ -95,17 +152,65 @@ import { useTranslation } from '../../i18n';
 
 const { t } = useTranslation();
 
-const props = defineProps<{ isOpen: boolean }>();
+const props = defineProps<{ isOpen: boolean; fonts?: string[] }>();
 const emit = defineEmits<{
   (e: 'close'): void;
-  (e: 'insert', symbol: string): void;
+  (e: 'insert', symbol: string, font?: string): void;
 }>();
 
 const searchRef = ref<HTMLInputElement | null>(null);
 const search = ref('');
+const activeTab = ref<'symbols' | 'special'>('symbols');
+const selectedFont = ref('');
 const activeCategory = ref('Common');
 const selectedSymbol = ref('');
 const recentSymbols = ref<string[]>([]);
+
+const BUILT_IN_FONTS = [
+  'Arial',
+  'Calibri',
+  'Cambria',
+  'Cambria Math',
+  'Courier New',
+  'Segoe UI Symbol',
+  'Times New Roman',
+  'Wingdings',
+];
+const fontOptions = computed(() => {
+  const set = new Set<string>([...BUILT_IN_FONTS, ...(props.fonts ?? []).filter(Boolean)]);
+  return Array.from(set).sort((a, b) => a.localeCompare(b));
+});
+
+interface SpecialCharacter {
+  char: string;
+  name: string;
+  shortcut?: string;
+}
+const specialCharacters: SpecialCharacter[] = [
+  { char: '—', name: 'Em Dash', shortcut: 'Alt+Ctrl+Num -' },
+  { char: '–', name: 'En Dash', shortcut: 'Ctrl+Num -' },
+  { char: '‑', name: 'Non-breaking Hyphen', shortcut: 'Ctrl+Shift+_' },
+  { char: '­', name: 'Optional Hyphen', shortcut: 'Ctrl+-' },
+  { char: ' ', name: 'Em Space' },
+  { char: ' ', name: 'En Space' },
+  { char: ' ', name: 'Thin Space' },
+  { char: ' ', name: 'Non-breaking Space', shortcut: 'Ctrl+Shift+Space' },
+  { char: '©', name: 'Copyright', shortcut: 'Alt+Ctrl+C' },
+  { char: '®', name: 'Registered', shortcut: 'Alt+Ctrl+R' },
+  { char: '™', name: 'Trademark', shortcut: 'Alt+Ctrl+T' },
+  { char: '§', name: 'Section' },
+  { char: '¶', name: 'Paragraph' },
+  { char: '…', name: 'Ellipsis', shortcut: 'Alt+Ctrl+.' },
+  { char: '‘', name: 'Left Single Quote' },
+  { char: '’', name: 'Right Single Quote' },
+  { char: '“', name: 'Left Double Quote' },
+  { char: '”', name: 'Right Double Quote' },
+  { char: '†', name: 'Dagger' },
+  { char: '‡', name: 'Double Dagger' },
+  { char: '‰', name: 'Per Mille' },
+  { char: '′', name: 'Prime' },
+  { char: '″', name: 'Double Prime' },
+];
 
 interface SymbolEntry {
   char: string;
@@ -295,6 +400,7 @@ watch(
   () => props.isOpen,
   async (open) => {
     if (open) {
+      activeTab.value = 'symbols';
       await nextTick();
       searchRef.value?.focus();
     }
@@ -309,7 +415,10 @@ function insertSymbol(sym: string) {
   if (!sym) return;
   // Track recent
   recentSymbols.value = [sym, ...recentSymbols.value.filter((s) => s !== sym)].slice(0, 10);
-  emit('insert', sym);
+  // Only the Symbols tab honors the font picker; special characters insert with
+  // the run's own font, matching Word.
+  const font = activeTab.value === 'symbols' ? selectedFont.value || undefined : undefined;
+  emit('insert', sym, font);
 }
 </script>
 
@@ -500,5 +609,94 @@ function insertSymbol(sym: string) {
   font-size: 11px;
   color: var(--doc-text-subtle);
   margin-right: 4px;
+}
+
+.symbol-preview-reserve {
+  min-height: 60px;
+  margin-top: 8px;
+}
+
+.symbol-tabbar {
+  display: flex;
+  gap: 4px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--doc-border);
+}
+.symbol-toptab {
+  padding: 8px 12px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--doc-text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.symbol-toptab.active {
+  color: var(--doc-primary);
+  border-bottom-color: var(--doc-primary);
+}
+
+.symbol-fontrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.symbol-fontrow label {
+  font-size: 13px;
+  color: var(--doc-text-muted);
+}
+.symbol-fontselect {
+  flex: 1;
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--doc-border-input);
+  background: var(--doc-surface);
+  color: var(--doc-text);
+  font-size: 13px;
+}
+
+.symbol-special {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 320px;
+  overflow: auto;
+}
+.symbol-special__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--doc-text);
+  cursor: pointer;
+  text-align: left;
+}
+.symbol-special__row:hover {
+  background: var(--doc-bg-hover);
+}
+.symbol-special__row.selected {
+  background: var(--doc-primary-light);
+  border-color: var(--doc-primary);
+}
+.symbol-special__char {
+  width: 32px;
+  text-align: center;
+  font-size: 18px;
+  border: 1px solid var(--doc-border);
+  border-radius: 4px;
+  padding: 2px 0;
+}
+.symbol-special__name {
+  flex: 1;
+}
+.symbol-special__shortcut {
+  font-size: 12px;
+  color: var(--doc-text-muted);
 }
 </style>

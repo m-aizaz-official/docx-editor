@@ -32,6 +32,7 @@ import {
   isImageRun,
   isLineBreakRun,
   isFieldRun,
+  isMathRun,
 } from './shared';
 import {
   paintTextRun,
@@ -39,6 +40,7 @@ import {
   paintImageRun,
   paintLineBreakRun,
   paintFieldRun,
+  paintMathRun,
   paintRun,
   applyPmPositions,
 } from './runs';
@@ -623,6 +625,10 @@ export function paintLine(
       if (run.displayMode !== 'block' && run.wrapType !== 'topAndBottom') {
         currentX += paintedWidth;
       }
+    } else if (isMathRun(run)) {
+      const runEl = paintMathRun(run, doc);
+      lineEl.appendChild(runEl);
+      currentX += line.atomAdvances?.[line.fromRun + i] ?? run.width;
     } else if (isLineBreakRun(run)) {
       const runEl = paintLineBreakRun(run, doc);
       lineEl.appendChild(runEl);

@@ -15,8 +15,10 @@ import type {
   ImageRun,
   LineBreakRun,
   FieldRun,
+  MathRun,
 } from '../../pagination-model/types';
 import type { RenderContext } from '../paintPage';
+import { renderMathNodes } from '../../math/render';
 import { isFloatingImageRun } from '../floatingImageFlow';
 import {
   applyImageRevisionAttrs,
@@ -36,6 +38,7 @@ import {
   isImageRun,
   isLineBreakRun,
   isFieldRun,
+  isMathRun,
 } from './shared';
 
 /**
@@ -694,9 +697,40 @@ export function paintFieldRun(run: FieldRun, doc: Document, context: RenderConte
 /**
  * Render a single run (for non-tab runs)
  */
+/**
+ * Paint a math equation run: the in-house renderer builds the math DOM, sized
+ * into the box the flow model reserved (`run.width`/`run.height`). Vertically
+ * centered on the line (math-axis approximation). `applyPmPositions` keeps it
+ * selectable/caret-addressable like any atom.
+ */
+export function paintMathRun(run: MathRun, doc: Document): HTMLElement {
+  const el = doc.createElement('span');
+  el.className = 'layout-run layout-run-math';
+  el.style.display = 'inline-block';
+  el.style.position = 'relative';
+  el.style.width = `${run.width}px`;
+  el.style.height = `${run.height}px`;
+  el.style.verticalAlign = 'middle';
+  el.style.overflow = 'visible';
+  el.style.userSelect = 'none';
+
+  const math = renderMathNodes(run.nodes, { doc, fontSize: run.fontSizePx });
+  math.style.position = 'absolute';
+  math.style.left = '0';
+  math.style.top = '50%';
+  math.style.transform = 'translateY(-50%)';
+  el.appendChild(math);
+
+  applyPmPositions(el, run.docFrom, run.docTo);
+  return el;
+}
+
 export function paintRun(run: Run, doc: Document, context?: RenderContext): HTMLElement {
   if (isTextRun(run)) {
     return paintTextRun(run, doc, context?.resolvedCommentIds);
+  }
+  if (isMathRun(run)) {
+    return paintMathRun(run, doc);
   }
   if (isTabRun(run)) {
     // Tab runs should be handled by paintLine with proper width calculation

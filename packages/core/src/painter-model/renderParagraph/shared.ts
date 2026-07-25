@@ -10,6 +10,7 @@ import type {
   ImageRun,
   LineBreakRun,
   FieldRun,
+  MathRun,
 } from '../../pagination-model/types';
 export {
   getImagePaintGeometry,
@@ -50,4 +51,8 @@ export function isLineBreakRun(run: Run): run is LineBreakRun {
 
 export function isFieldRun(run: Run): run is FieldRun {
   return run.kind === 'field';
+}
+
+export function isMathRun(run: Run): run is MathRun {
+  return run.kind === 'math';
 }

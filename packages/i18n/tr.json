@@ -45,7 +45,8 @@
     "watermark": "Filigran",
     "break": null,
     "sectionBreakContinuous": null,
-    "sectionBreakNextPage": null
+    "sectionBreakNextPage": null,
+    "equation": null
   },
   "formattingBar": {
     "groups": {
@@ -83,7 +84,8 @@
     "imagePropertiesShortcut": "Görsel özellikleri (alternatif metin, kenarlık)...",
     "clearFormatting": "Biçimlendirmeyi temizle",
     "commentsAndChanges": null,
-    "moreItems": null
+    "moreItems": null,
+    "formatPainter": null
   },
   "alignment": {
     "alignLeft": "Sola hizala",
@@ -298,7 +300,11 @@
         "emoji": "Emoji"
       },
       "noResultsEmpty": "Sembol bulunamadı",
-      "recent": "Son kullanılanlar:"
+      "recent": "Son kullanılanlar:",
+      "font": null,
+      "normalText": null,
+      "tabSpecial": null,
+      "tabSymbols": null
     },
     "imageProperties": {
       "title": "Görsel özellikleri",
@@ -562,6 +568,12 @@
       "textLabel": "Metin",
       "title": "Filigran",
       "washout": "Soluk"
+    },
+    "equation": {
+      "displayMode": null,
+      "gallery": null,
+      "placeholder": null,
+      "title": null
     }
   },
   "comments": {
@@ -610,7 +622,9 @@
       "makeCasual": "Samimi yap",
       "custom": "Özel"
     },
-    "updateTableOfContents": "İçindekiler tablosunu güncelle"
+    "updateTableOfContents": "İçindekiler tablosunu güncelle",
+    "continueNumbering": null,
+    "restartNumbering": null
   },
   "documentOutline": {
     "ariaLabel": "Belge ana hattı",

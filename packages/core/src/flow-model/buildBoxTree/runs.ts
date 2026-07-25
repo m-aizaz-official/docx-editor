@@ -28,6 +28,9 @@ import { resolveColor, resolveHighlightToCss } from '../../utils/colorResolver';
 import { sanitizeHref } from '../../utils/sanitizeHref';
 import { sanitizeImageSrc } from '../../utils/sanitizeImageSrc';
 import { halfPointsToPixels, halfPointsToPoints } from '../../utils/units';
+import { ommlToMathAst } from '../../math/omml';
+import { measureMathBox } from '../../math/measure';
+import { measureTextWidth } from '../metrics/textMetrics';
 import {
   checkboxDisplayStateFromAttrs,
   textStartsWithCheckboxGlyph,
@@ -499,12 +502,32 @@ export function paragraphToRuns(
         docTo: childPos + child.nodeSize,
       });
     } else if (child.type.name === 'math') {
-      const text = (child.attrs.plainText as string) || '[equation]';
+      const ommlXml = (child.attrs.ommlXml as string) || '';
+      const plainText = (child.attrs.plainText as string) || '';
+      const display = (child.attrs.display as 'inline' | 'block') || 'inline';
+      const nodes = ommlToMathAst(ommlXml).body;
+      const fontSizePt = paraDefaults.fontSize ?? 11;
+      const fontSizePx = fontSizePt * (96 / 72);
+      const metrics = measureMathBox(nodes, fontSizePx, (mathText, style) =>
+        measureTextWidth(mathText, {
+          fontFamily: style.fontFamily,
+          fontSize: style.fontSizePx * (72 / 96),
+          bold: style.bold,
+          italic: style.italic,
+        })
+      );
       runs.push({
-        kind: 'text',
-        text,
-        italic: true,
-        fontFamily: 'Cambria Math',
+        kind: 'math',
+        nodes,
+        display,
+        ommlXml,
+        plainText,
+        // A little slack so the painted CSS math never overflows its line box,
+        // and a minimum so an empty equation stays clickable.
+        width: Math.max(Math.ceil(metrics.width) + 4, Math.round(fontSizePx * 0.6)),
+        height: Math.ceil(metrics.height),
+        ascent: metrics.ascent,
+        fontSizePx,
         docFrom: childPos,
         docTo: childPos + child.nodeSize,
       });

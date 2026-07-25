@@ -45,7 +45,8 @@
     "watermark": "סימן מים",
     "break": null,
     "sectionBreakContinuous": null,
-    "sectionBreakNextPage": null
+    "sectionBreakNextPage": null,
+    "equation": null
   },
   "formattingBar": {
     "groups": {
@@ -83,7 +84,8 @@
     "imagePropertiesShortcut": "מאפייני תמונה",
     "clearFormatting": "נקה עיצוב",
     "commentsAndChanges": null,
-    "moreItems": null
+    "moreItems": null,
+    "formatPainter": null
   },
   "alignment": {
     "alignLeft": "יישור לשמאל",
@@ -298,7 +300,11 @@
         "emoji": "אימוג'י"
       },
       "noResultsEmpty": "לא נמצאו סימנים",
-      "recent": "אחרונים:"
+      "recent": "אחרונים:",
+      "font": null,
+      "normalText": null,
+      "tabSpecial": null,
+      "tabSymbols": null
     },
     "imageProperties": {
       "title": "מאפייני תמונה",
@@ -562,6 +568,12 @@
       "textLabel": "טקסט",
       "title": "סימן מים",
       "washout": "דהוי"
+    },
+    "equation": {
+      "displayMode": null,
+      "gallery": null,
+      "placeholder": null,
+      "title": null
     }
   },
   "comments": {
@@ -610,7 +622,9 @@
       "makeCasual": "הפוך ללא רשמי",
       "custom": "מותאם אישית"
     },
-    "updateTableOfContents": "עדכן תוכן עניינים"
+    "updateTableOfContents": "עדכן תוכן עניינים",
+    "continueNumbering": null,
+    "restartNumbering": null
   },
   "documentOutline": {
     "ariaLabel": "מתווה המסמך",

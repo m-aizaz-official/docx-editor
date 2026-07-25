@@ -45,7 +45,8 @@
     "watermark": "Filigrane",
     "break": null,
     "sectionBreakContinuous": null,
-    "sectionBreakNextPage": null
+    "sectionBreakNextPage": null,
+    "equation": null
   },
   "formattingBar": {
     "groups": {
@@ -83,7 +84,8 @@
     "imagePropertiesShortcut": "Propriétés de l'image... (description, bordure)",
     "clearFormatting": "Effacer la mise en forme",
     "commentsAndChanges": null,
-    "moreItems": null
+    "moreItems": null,
+    "formatPainter": null
   },
   "alignment": {
     "alignLeft": "Aligner à gauche",
@@ -298,7 +300,11 @@
         "currency": "Devises",
         "music": "Musique",
         "emoji": "Émojis"
-      }
+      },
+      "font": null,
+      "normalText": null,
+      "tabSpecial": null,
+      "tabSymbols": null
     },
     "imageProperties": {
       "title": "Propriétés de l'image",
@@ -562,6 +568,12 @@
       "textLabel": "Texte",
       "title": "Filigrane",
       "washout": "Estompé"
+    },
+    "equation": {
+      "displayMode": null,
+      "gallery": null,
+      "placeholder": null,
+      "title": null
     }
   },
   "comments": {
@@ -610,7 +622,9 @@
       "makeCasual": "Rendre informel",
       "custom": "Personnalisé"
     },
-    "updateTableOfContents": "Mettre à jour la table des matières"
+    "updateTableOfContents": "Mettre à jour la table des matières",
+    "continueNumbering": null,
+    "restartNumbering": null
   },
   "documentOutline": {
     "ariaLabel": "Plan du document",

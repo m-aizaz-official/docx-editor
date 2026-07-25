@@ -47,7 +47,10 @@
         :font-families="fontFamilies"
         :document-fonts="documentFonts"
         :document-styles="documentStyles"
+        :format-painter-active="formatPainterArmed"
         @insert-link="showHyperlink = true"
+        @format-painter="armFormatPainter(false)"
+        @format-painter-sticky="armFormatPainter(true)"
         @apply-style="handleApplyStyle"
         @zoom-in="zoomIn"
         @zoom-out="zoomOut"
@@ -79,6 +82,7 @@
       v-model:show-find-replace="showFindReplace"
       v-model:show-hyperlink="showHyperlink"
       v-model:show-insert-symbol="showInsertSymbol"
+      v-model:show-insert-equation="showInsertEquation"
       v-model:show-image-properties="showImageProperties"
       v-model:show-page-setup="showPageSetup"
       v-model:show-watermark="showWatermark"
@@ -89,8 +93,10 @@
       :section-properties="currentSectionProps"
       :current-watermark="currentWatermark"
       :watermark-presets="watermarkPresets"
+      :symbol-fonts="symbolFonts"
       :scroll-visible-position-into-view="scrollVisiblePositionIntoView"
       @insert-symbol="handleInsertSymbol"
+      @insert-equation="handleInsertEquation"
       @hyperlink-submit="handleHyperlinkSubmit"
       @hyperlink-remove="handleHyperlinkRemove"
       @page-setup-apply="handlePageSetupApply"
@@ -395,7 +401,12 @@ import {
 } from '@docx-editor.dev/core/flow-model';
 import { getSelectionInfo as getSelectionInfoImpl } from '../utils/refApiQueries';
 import { computeVisualPagesHeight } from '../utils/visualPagesHeight';
-import { extractSelectionState } from '@docx-editor.dev/core/prosemirror';
+import {
+  extractSelectionState,
+  captureMarksFromSelection,
+  applyCapturedMarks,
+  type CapturedFormatting,
+} from '@docx-editor.dev/core/prosemirror';
 import { nearestHfHostEl } from '../utils/domQueries';
 import Toolbar from './Toolbar.vue';
 import TableToolbar from './ui/TableToolbar.vue';
@@ -524,6 +535,7 @@ let lastEmittedDocument: Document | null = null;
 const showFindReplace = ref(false);
 const showHyperlink = ref(false);
 const showInsertSymbol = ref(false);
+const showInsertEquation = ref(false);
 const showImageProperties = ref(false);
 const showPageSetup = ref(false);
 const showOutline = ref(props.showOutline);
@@ -607,6 +619,64 @@ const {
     const selection = getSelectionInfoImpl(view);
     selectionChangeSubscribers.forEach((listener) => listener(selection));
   },
+});
+
+// Format Painter: copy the selection's formatting, then paint it onto the next
+// selection. Single click = paint once; double-click = sticky until Esc. Only
+// paints when the gesture lands on the document (never the toolbar), mirroring
+// React's implementation.
+const formatPainterArmed = ref(false);
+const formatPainterState = ref<{ captured: CapturedFormatting; sticky: boolean } | null>(null);
+
+function disarmFormatPainter() {
+  formatPainterState.value = null;
+  formatPainterArmed.value = false;
+}
+function armFormatPainter(sticky: boolean) {
+  const view = editorView.value;
+  if (!view) return;
+  const captured = captureMarksFromSelection(view.state);
+  formatPainterState.value = {
+    captured,
+    sticky: sticky || (formatPainterState.value?.sticky ?? false),
+  };
+  formatPainterArmed.value = true;
+  view.focus();
+}
+function applyPainterToSelection(e: Event) {
+  const target = e.target as HTMLElement | null;
+  if (!target || !target.closest('.layout-page')) return;
+  const painter = formatPainterState.value;
+  if (!painter) return;
+  const view = editorView.value;
+  if (!view) return;
+  const { from, to } = view.state.selection;
+  if (from === to) return;
+  applyCapturedMarks(painter.captured)(view.state, view.dispatch);
+  if (!painter.sticky) disarmFormatPainter();
+  view.focus();
+}
+function onFormatPainterKey(e: KeyboardEvent) {
+  if (e.key === 'Escape') disarmFormatPainter();
+}
+watch(formatPainterArmed, (armed) => {
+  const method = armed ? 'addEventListener' : 'removeEventListener';
+  window[method]('mouseup', applyPainterToSelection);
+  window[method]('click', applyPainterToSelection);
+  window[method]('keydown', onFormatPainterKey);
+});
+onBeforeUnmount(() => {
+  window.removeEventListener('mouseup', applyPainterToSelection);
+  window.removeEventListener('click', applyPainterToSelection);
+  window.removeEventListener('keydown', onFormatPainterKey);
+});
+
+// Font names offered by the symbol picker's font dropdown.
+const symbolFonts = computed(() => {
+  const names = new Set<string>();
+  for (const f of documentFonts.value ?? []) names.add(f.name);
+  for (const f of props.fontFamilies ?? []) names.add(typeof f === 'string' ? f : f.name);
+  return Array.from(names);
 });
 
 // Host-facing comment callbacks + onEditorViewReady wiring (the `onComment*` /
@@ -872,6 +942,7 @@ const {
   handleInsertSectionBreakNextPage,
   handleInsertSectionBreakContinuous,
   handleInsertSymbol,
+  handleInsertEquation,
   applyFormatting,
   setParagraphStyle,
   insertBreak,
@@ -1040,6 +1111,7 @@ const { handleMenuAction, handleMenuTableInsert } = useMenuActions({
   showWatermark,
   showHyperlink,
   showInsertSymbol,
+  showInsertEquation,
   showKeyboardShortcuts,
   handleClearFormatting,
   handleInsertPageBreak,
