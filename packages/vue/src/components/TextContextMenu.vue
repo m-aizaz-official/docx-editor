@@ -58,6 +58,7 @@ const props = defineProps<{
   canMergeCells?: boolean;
   canSplitCell?: boolean;
   inToc?: boolean;
+  listRestart?: { isNumberedList: boolean; hasRestart: boolean };
 }>();
 
 const emit = defineEmits<{
@@ -147,6 +148,23 @@ const visibleItems = computed<ContextMenuItem[]>(() => {
         label: t('contextMenu.updateTableOfContents'),
         action: 'updateTableOfContents',
       }
+    );
+  }
+
+  if (props.listRestart?.isNumberedList && props.isEditable) {
+    items.push(
+      { id: 'div-list', label: '', action: '', divider: true },
+      props.listRestart.hasRestart
+        ? {
+            id: 'continueNumbering',
+            label: t('contextMenu.continueNumbering'),
+            action: 'continueNumbering',
+          }
+        : {
+            id: 'restartNumbering',
+            label: t('contextMenu.restartNumbering'),
+            action: 'restartNumbering',
+          }
     );
   }
 

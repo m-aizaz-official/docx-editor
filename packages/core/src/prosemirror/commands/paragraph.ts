@@ -26,7 +26,7 @@ export {
   getParagraphTabs,
   getParagraphBidi,
 } from '../extensions/core/ParagraphExtension';
-export { isInList, getListInfo } from '../extensions/features/ListExtension';
+export { isInList, getListInfo, getListRestartState } from '../extensions/features/ListExtension';
 
 // ============================================================================
 // COMMANDS — delegated to singleton extension manager
@@ -71,6 +71,8 @@ export function setIndentFirstLine(twips: number, hanging?: boolean): Command {
 // Lists
 export const toggleBulletList: Command = cmds.toggleBulletList();
 export const toggleNumberedList: Command = cmds.toggleNumberedList();
+export const restartNumbering: Command = cmds.restartNumbering();
+export const continueNumbering: Command = cmds.continueNumbering();
 export const increaseListLevel: Command = cmds.increaseListLevel();
 export const decreaseListLevel: Command = cmds.decreaseListLevel();
 export const removeList: Command = cmds.removeList();

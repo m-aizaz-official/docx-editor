@@ -152,3 +152,78 @@ export function collectNumberingFromPM(pmDoc: PMNode): NumberingDefinitions | un
 
   return { abstractNums, nums };
 }
+
+/**
+ * Round-trip counterpart to {@link collectNumberingFromPM}.
+ *
+ * On the round-trip path the document's original `numbering.xml`
+ * (`package.numbering`) is preserved as-is rather than rebuilt from PM, so a
+ * restart that minted a fresh `numId` in the editor (see `restartNumbering`)
+ * has no backing `w:num` — Word would drop its markers. This walks the PM tree
+ * for paragraphs carrying a `listStartOverride` and ensures each such `numId`
+ * has a `w:num` with the matching `w:lvlOverride`/`w:startOverride`, minting the
+ * instance (pointing at the paragraph's `listAbstractNumId`) when absent or
+ * merging the override into an existing instance otherwise.
+ *
+ * Returns the (possibly new) definitions object; the input is never mutated. A
+ * restart on a numId whose abstract can't be resolved (`listAbstractNumId`
+ * missing and no existing instance) is skipped — there's nothing to reference.
+ */
+export function mergeRestartOverridesIntoNumbering(
+  numbering: NumberingDefinitions | undefined,
+  pmDoc: PMNode
+): NumberingDefinitions | undefined {
+  // numId → { abstractNumId, ilvl → startOverride }
+  const restarts = new Map<
+    number,
+    { abstractNumId: number | undefined; overrides: Map<number, number> }
+  >();
+  pmDoc.descendants((node) => {
+    if (node.type.name !== 'paragraph') return true;
+    const attrs = node.attrs as ParagraphListAttrs;
+    if (attrs.listStartOverride == null) return true;
+    const numId = attrs.numPr?.numId;
+    if (typeof numId !== 'number' || numId <= 0) return true;
+    const ilvl = attrs.numPr?.ilvl ?? 0;
+    let entry = restarts.get(numId);
+    if (!entry) {
+      entry = { abstractNumId: attrs.listAbstractNumId, overrides: new Map() };
+      restarts.set(numId, entry);
+    }
+    if (entry.abstractNumId === undefined && attrs.listAbstractNumId !== undefined) {
+      entry.abstractNumId = attrs.listAbstractNumId;
+    }
+    if (!entry.overrides.has(ilvl)) entry.overrides.set(ilvl, attrs.listStartOverride);
+    return true;
+  });
+
+  if (restarts.size === 0) return numbering;
+
+  const nums: NumberingInstance[] = numbering ? [...numbering.nums] : [];
+  const abstractNums: AbstractNumbering[] = numbering ? numbering.abstractNums : [];
+
+  for (const [numId, { abstractNumId, overrides }] of restarts) {
+    const levelOverrides = [...overrides.entries()]
+      .sort((a, b) => a[0] - b[0])
+      .map(([ilvl, startOverride]) => ({ ilvl, startOverride }));
+
+    const existingIdx = nums.findIndex((n) => n.numId === numId);
+    if (existingIdx === -1) {
+      if (abstractNumId === undefined) continue; // no abstract to reference
+      nums.push({ numId, abstractNumId, levelOverrides });
+      continue;
+    }
+
+    // Merge the overrides into the existing instance (restart wins per ilvl).
+    const existing = nums[existingIdx];
+    const merged = new Map<number, { ilvl: number; startOverride?: number; lvl?: ListLevel }>();
+    for (const o of existing.levelOverrides ?? []) merged.set(o.ilvl, o);
+    for (const o of levelOverrides) merged.set(o.ilvl, { ...merged.get(o.ilvl), ...o });
+    nums[existingIdx] = {
+      ...existing,
+      levelOverrides: [...merged.values()].sort((a, b) => a.ilvl - b.ilvl),
+    };
+  }
+
+  return { abstractNums, nums };
+}

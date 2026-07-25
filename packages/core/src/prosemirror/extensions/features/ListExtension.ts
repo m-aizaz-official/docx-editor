@@ -137,6 +137,129 @@ const toggleNumberedList: Command = (state, dispatch) => {
   return toggleList(2)(state, dispatch);
 };
 
+/**
+ * Restart a numbered list at `startValue` (default 1) from the current
+ * paragraph. Word's "Restart at 1": the target paragraph and the rest of its
+ * list get a fresh `numId` so their counter is independent of the items above,
+ * and the target carries `listStartOverride` so the counter engine resets on
+ * the first occurrence of the new `numId`+level. `listAbstractNumId` is kept so
+ * the marker format (decimal/roman/letter, lvlText) renders identically, and on
+ * save the new `numId` is backed by a `w:num` → same abstract with a
+ * `w:lvlOverride`/`w:startOverride` (see `mergeRestartOverridesIntoNumbering`).
+ *
+ * No-op for bullets (restart is meaningless) and non-list paragraphs.
+ */
+function restartNumbering(startValue = 1): Command {
+  return (state, dispatch) => {
+    const { $from } = state.selection;
+    const paragraph = $from.parent;
+    if (paragraph.type.name !== 'paragraph') return false;
+
+    const numPr = paragraph.attrs.numPr as { numId?: number; ilvl?: number } | null;
+    if (!numPr?.numId) return false;
+    if (paragraph.attrs.listIsBullet) return false;
+
+    const oldNumId = numPr.numId;
+    const targetPos = $from.before($from.depth);
+
+    if (!dispatch) return true;
+
+    // Allocate a numId not referenced by any paragraph in the document.
+    let maxNumId = 0;
+    state.doc.descendants((node) => {
+      if (node.type.name === 'paragraph') {
+        const id = (node.attrs.numPr as { numId?: number } | null)?.numId;
+        if (typeof id === 'number' && id > maxNumId) maxNumId = id;
+      }
+      return true;
+    });
+    const newNumId = maxNumId + 1;
+
+    // Reassign the target paragraph and every following paragraph sharing the
+    // old numId (the rest of the same list) to the new numId; only the target
+    // carries the start override. setNodeMarkup preserves node size, so the
+    // state.doc positions stay valid across the loop.
+    let tr = state.tr;
+    let reached = false;
+    state.doc.descendants((node, pos) => {
+      if (node.type.name !== 'paragraph') return true;
+      if (pos === targetPos) reached = true;
+      if (!reached) return true;
+      const nodeNumPr = node.attrs.numPr as { numId?: number; ilvl?: number } | null;
+      if (nodeNumPr?.numId !== oldNumId) return true;
+      const isTarget = pos === targetPos;
+      tr = tr.setNodeMarkup(pos, undefined, {
+        ...node.attrs,
+        numPr: { ...nodeNumPr, numId: newNumId },
+        listStartOverride: isTarget ? startValue : (node.attrs.listStartOverride ?? null),
+      });
+      return true;
+    });
+
+    dispatch(tr.scrollIntoView());
+    return true;
+  };
+}
+
+/**
+ * Reverse a restart: reconnect the current paragraph's list to the nearest
+ * preceding numbered list so numbering continues rather than restarting.
+ * Reassigns the current paragraph and the rest of its list back to the
+ * previous list's `numId`/`listAbstractNumId` (so they share its counter) and
+ * clears `listStartOverride`. With no preceding list, it just clears the
+ * override (the list keeps its own counter, starting at 1).
+ */
+function continueNumbering(): Command {
+  return (state, dispatch) => {
+    const { $from } = state.selection;
+    const paragraph = $from.parent;
+    if (paragraph.type.name !== 'paragraph') return false;
+
+    const numPr = paragraph.attrs.numPr as { numId?: number; ilvl?: number } | null;
+    if (!numPr?.numId) return false;
+    if (paragraph.attrs.listIsBullet) return false;
+
+    const curNumId = numPr.numId;
+    const targetPos = $from.before($from.depth);
+
+    // Nearest preceding numbered-list paragraph with a different numId.
+    let prevNumId: number | null = null;
+    let prevAbstract: number | undefined;
+    state.doc.descendants((node, pos) => {
+      if (pos >= targetPos || node.type.name !== 'paragraph') return true;
+      const nodeNumPr = node.attrs.numPr as { numId?: number } | null;
+      if (nodeNumPr?.numId && !node.attrs.listIsBullet && nodeNumPr.numId !== curNumId) {
+        prevNumId = nodeNumPr.numId;
+        prevAbstract = node.attrs.listAbstractNumId as number | undefined;
+      }
+      return true;
+    });
+
+    if (!dispatch) return true;
+
+    let tr = state.tr;
+    let reached = false;
+    state.doc.descendants((node, pos) => {
+      if (node.type.name !== 'paragraph') return true;
+      if (pos === targetPos) reached = true;
+      if (!reached) return true;
+      const nodeNumPr = node.attrs.numPr as { numId?: number; ilvl?: number } | null;
+      if (nodeNumPr?.numId !== curNumId) return true;
+      tr = tr.setNodeMarkup(pos, undefined, {
+        ...node.attrs,
+        numPr: prevNumId != null ? { ...nodeNumPr, numId: prevNumId } : nodeNumPr,
+        listAbstractNumId:
+          prevNumId != null ? (prevAbstract ?? null) : (node.attrs.listAbstractNumId ?? null),
+        listStartOverride: null,
+      });
+      return true;
+    });
+
+    dispatch(tr.scrollIntoView());
+    return true;
+  };
+}
+
 const increaseListLevel: Command = (state, dispatch) => {
   const { $from } = state.selection;
   const paragraph = $from.parent;
@@ -260,6 +383,33 @@ export function getListInfo(state: EditorState): { numId: number; ilvl: number }
     numId: paragraph.attrs.numPr.numId,
     ilvl: paragraph.attrs.numPr.ilvl || 0,
   };
+}
+
+/**
+ * Numbered-list restart availability for the current paragraph, for driving the
+ * "Restart numbering at 1" / "Continue numbering" context-menu entries.
+ *
+ * `isNumberedList` — caret is in a numbered (non-bullet) list.
+ * `hasRestart` — the paragraph already carries a restart override, so
+ * "Continue numbering" is the meaningful action (otherwise "Restart at 1" is).
+ */
+export function getListRestartState(state: EditorState): {
+  isNumberedList: boolean;
+  hasRestart: boolean;
+} {
+  const { $from } = state.selection;
+  const paragraph = $from.parent;
+  if (paragraph.type.name !== 'paragraph') {
+    return { isNumberedList: false, hasRestart: false };
+  }
+  const attrs = paragraph.attrs as {
+    numPr?: { numId?: number } | null;
+    listIsBullet?: boolean;
+    listStartOverride?: number | null;
+  };
+  const isNumberedList = !!attrs.numPr?.numId && !attrs.listIsBullet;
+  const hasRestart = isNumberedList && attrs.listStartOverride != null;
+  return { isNumberedList, hasRestart };
 }
 
 // ============================================================================
@@ -486,6 +636,8 @@ export const ListExtension = createExtension({
       commands: {
         toggleBulletList: () => toggleBulletList,
         toggleNumberedList: () => toggleNumberedList,
+        restartNumbering: () => restartNumbering(),
+        continueNumbering: () => continueNumbering(),
         increaseListLevel: () => increaseListLevel,
         decreaseListLevel: () => decreaseListLevel,
         removeList: () => removeList,

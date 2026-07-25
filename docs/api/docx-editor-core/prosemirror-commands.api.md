@@ -89,6 +89,9 @@ export const clearStyle: Command;
 // @public (undocumented)
 export const clearTextColor: Command;
 
+// @public (undocumented)
+export const continueNumbering: Command;
+
 // @public
 export function createRemoveMarkCommand(markType: MarkType): Command;
 
@@ -154,6 +157,12 @@ export function getListInfo(state: EditorState): {
     numId: number;
     ilvl: number;
 } | null;
+
+// @public
+export function getListRestartState(state: EditorState): {
+    isNumberedList: boolean;
+    hasRestart: boolean;
+};
 
 // @public
 export function getMarkAttr(state: EditorState, markType: MarkType, attr: string): unknown | null;
@@ -266,6 +275,9 @@ export interface ResolvedStyleAttrs {
     // (undocumented)
     runFormatting?: TextFormatting;
 }
+
+// @public (undocumented)
+export const restartNumbering: Command;
 
 // @public (undocumented)
 export function selectColumn(state: EditorState, dispatch?: (tr: Transaction) => void): boolean;

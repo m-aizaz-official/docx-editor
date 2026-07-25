@@ -463,3 +463,56 @@ test.describe('List Edge Cases', () => {
     await assertions.assertDocumentContainsText(page, 'Rapid toggle');
   });
 });
+
+test.describe('Restart numbering', () => {
+  let editor: EditorPage;
+
+  test.beforeEach(async ({ page }) => {
+    editor = new EditorPage(page);
+    await editor.goto();
+    await editor.waitForReady();
+    await editor.newDocument();
+    await editor.focus();
+  });
+
+  /** Painted numbered-list markers, top to bottom. */
+  const markers = (page: import('@playwright/test').Page) =>
+    page.$$eval('.layout-page-content .layout-list-marker', (els) =>
+      els.map((e) => (e.textContent || '').trim())
+    );
+
+  async function threeItemNumberedList(page: import('@playwright/test').Page) {
+    await editor.typeText('Alpha');
+    await editor.toggleNumberedList();
+    await editor.pressEnter();
+    await editor.typeText('Beta');
+    await editor.pressEnter();
+    await editor.typeText('Gamma');
+    await expect.poll(() => markers(page)).toEqual(['1.', '2.', '3.']);
+  }
+
+  test('right-click "Restart numbering at 1" restarts the list from the clicked item', async ({
+    page,
+  }) => {
+    await threeItemNumberedList(page);
+
+    // Right-click the second item and choose Restart.
+    await page.locator('.layout-page-content').getByText('Beta').click({ button: 'right' });
+    await page.locator('.docx-text-context-menu').getByText('Restart numbering at 1').click();
+
+    await expect.poll(() => markers(page)).toEqual(['1.', '1.', '2.']);
+  });
+
+  test('"Continue numbering" reconnects a restarted item to the list above', async ({ page }) => {
+    await threeItemNumberedList(page);
+
+    await page.locator('.layout-page-content').getByText('Beta').click({ button: 'right' });
+    await page.locator('.docx-text-context-menu').getByText('Restart numbering at 1').click();
+    await expect.poll(() => markers(page)).toEqual(['1.', '1.', '2.']);
+
+    // The restarted item now offers Continue numbering instead.
+    await page.locator('.layout-page-content').getByText('Beta').click({ button: 'right' });
+    await page.locator('.docx-text-context-menu').getByText('Continue numbering').click();
+    await expect.poll(() => markers(page)).toEqual(['1.', '2.', '3.']);
+  });
+});

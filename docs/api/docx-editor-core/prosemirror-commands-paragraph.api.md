@@ -29,6 +29,9 @@ export function applyStyle(styleId: string, resolvedAttrs?: ResolvedStyleAttrs):
 export const clearStyle: Command;
 
 // @public (undocumented)
+export const continueNumbering: Command;
+
+// @public (undocumented)
 export function decreaseIndent(amount?: number): Command;
 
 // @public (undocumented)
@@ -56,6 +59,12 @@ export function getListInfo(state: EditorState): {
     numId: number;
     ilvl: number;
 } | null;
+
+// @public
+export function getListRestartState(state: EditorState): {
+    isNumberedList: boolean;
+    hasRestart: boolean;
+};
 
 // @public (undocumented)
 export function getParagraphAlignment(state: EditorState): ParagraphAlignment | null;
@@ -101,6 +110,9 @@ export interface ResolvedStyleAttrs {
     // (undocumented)
     runFormatting?: TextFormatting;
 }
+
+// @public (undocumented)
+export const restartNumbering: Command;
 
 // @public
 export function setAlignment(alignment: ParagraphAlignment): Command;

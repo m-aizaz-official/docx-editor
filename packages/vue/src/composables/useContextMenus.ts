@@ -18,6 +18,7 @@ import { getTableContext } from '@docx-editor.dev/core/prosemirror/extensions/no
 import {
   isPositionInsideTableOfContents,
   updateTableOfContents,
+  getListRestartState,
 } from '@docx-editor.dev/core/prosemirror';
 import type { ImageLayoutTarget } from '@docx-editor.dev/core/prosemirror/commands';
 import type { PageLayout } from '@docx-editor.dev/core/pagination-model';
@@ -45,6 +46,7 @@ export interface TextContextMenuState {
   inToc: boolean;
   canMergeCells: boolean;
   canSplitCell: boolean;
+  listRestart: { isNumberedList: boolean; hasRestart: boolean };
 }
 
 export interface UseContextMenusOptions {
@@ -82,6 +84,7 @@ export function useContextMenus(opts: UseContextMenusOptions): UseContextMenusRe
     inToc: false,
     canMergeCells: false,
     canSplitCell: false,
+    listRestart: { isNumberedList: false, hasRestart: false },
   });
 
   // Image-specific right-click menu — shows wrap-mode options instead of the
@@ -190,6 +193,7 @@ export function useContextMenus(opts: UseContextMenusOptions): UseContextMenusRe
       inToc,
       canMergeCells: !!tableCtx.hasMultiCellSelection,
       canSplitCell: !!tableCtx.canSplitCell,
+      listRestart: getListRestartState(view.state),
     };
   }
 
@@ -328,7 +332,9 @@ export function useContextMenus(opts: UseContextMenusOptions): UseContextMenusRe
       case 'mergeCells':
       case 'splitCell':
       case 'selectTable':
-      case 'deleteTable': {
+      case 'deleteTable':
+      case 'restartNumbering':
+      case 'continueNumbering': {
         const cmd = cmds[action];
         if (cmd) {
           const command = cmd() as (

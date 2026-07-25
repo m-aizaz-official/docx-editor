@@ -15,6 +15,9 @@ import {
   type TableContextInfo,
   isPositionInsideTableOfContents,
   updateTableOfContents,
+  getListRestartState,
+  restartNumbering as pmRestartNumbering,
+  continueNumbering as pmContinueNumbering,
 } from '@docx-editor.dev/core/prosemirror';
 import type { PageLayout } from '@docx-editor.dev/core/pagination-model';
 import {
@@ -38,7 +41,10 @@ interface ContextMenuState {
   cursorInTable: boolean;
   cursorInToc: boolean;
   tableContext: TableContextInfo | null;
+  listRestart: { isNumberedList: boolean; hasRestart: boolean };
 }
+
+const NO_LIST_RESTART = { isNumberedList: false, hasRestart: false } as const;
 
 /**
  * Owns the right-click context-menu surfaces:
@@ -91,6 +97,7 @@ export function useContextMenus({
     cursorInTable: false,
     cursorInToc: false,
     tableContext: null,
+    listRestart: NO_LIST_RESTART,
   });
 
   const imageContextMenu = useImageContextMenu();
@@ -119,6 +126,7 @@ export function useContextMenus({
         cursorInTable: tableContext.isInTable,
         cursorInToc,
         tableContext: tableContext.isInTable ? tableContext : null,
+        listRestart: view ? getListRestartState(view.state) : NO_LIST_RESTART,
       });
     },
     [getActiveEditorView]
@@ -159,6 +167,7 @@ export function useContextMenus({
         cursorInTable: tableContext.isInTable,
         cursorInToc,
         tableContext: tableContext.isInTable ? tableContext : null,
+        listRestart: view ? getListRestartState(view.state) : NO_LIST_RESTART,
       });
     },
     [getActiveEditorView, imageContextMenu]
@@ -217,6 +226,7 @@ export function useContextMenus({
       cursorInTable: false,
       cursorInToc: false,
       tableContext: null,
+      listRestart: NO_LIST_RESTART,
     });
   }, []);
 
@@ -264,8 +274,23 @@ export function useContextMenus({
       items.push({
         action: 'addComment',
         label: 'Comment',
-        dividerAfter: !contextMenu.cursorInTable,
+        dividerAfter: !contextMenu.cursorInTable && !contextMenu.listRestart.isNumberedList,
       });
+    }
+    if (contextMenu.listRestart.isNumberedList) {
+      items.push(
+        contextMenu.listRestart.hasRestart
+          ? {
+              action: 'continueNumbering',
+              label: t('contextMenu.continueNumbering'),
+              dividerAfter: !contextMenu.cursorInTable,
+            }
+          : {
+              action: 'restartNumbering',
+              label: t('contextMenu.restartNumbering'),
+              dividerAfter: !contextMenu.cursorInTable,
+            }
+      );
     }
     if (contextMenu.cursorInTable) {
       items.push(
@@ -308,6 +333,7 @@ export function useContextMenus({
     contextMenu.cursorInTable,
     contextMenu.cursorInToc,
     contextMenu.tableContext,
+    contextMenu.listRestart,
     i18n,
     t,
   ]);
@@ -420,6 +446,12 @@ export function useContextMenus({
           break;
         case 'deleteTable':
           pmDeleteTable(view.state, view.dispatch);
+          break;
+        case 'restartNumbering':
+          pmRestartNumbering(view.state, view.dispatch);
+          break;
+        case 'continueNumbering':
+          pmContinueNumbering(view.state, view.dispatch);
           break;
         case 'addComment': {
           const { from, to } = view.state.selection;

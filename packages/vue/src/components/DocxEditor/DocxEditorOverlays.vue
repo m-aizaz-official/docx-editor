@@ -25,6 +25,7 @@
     :can-merge-cells="contextMenu.canMergeCells"
     :can-split-cell="contextMenu.canSplitCell"
     :in-toc="contextMenu.inToc"
+    :list-restart="contextMenu.listRestart"
     @action="(action) => emit('context-menu-action', action)"
     @close="emit('close-context-menu')"
   />

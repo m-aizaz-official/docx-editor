@@ -37,7 +37,9 @@ export type TextContextAction =
   | 'selectTable'
   | 'deleteTable'
   | 'updateTableOfContents'
-  | 'addComment';
+  | 'addComment'
+  | 'restartNumbering'
+  | 'continueNumbering';
 
 /**
  * Menu item configuration
@@ -350,6 +352,26 @@ const UpdateTocIcon = () => (
   </svg>
 );
 
+const RestartNumberingIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M13 8a5 5 0 11-1.6-3.7"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+    />
+    <path d="M13 2v3h-3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+    <path d="M6.5 6.2L8 5.4V11" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+  </svg>
+);
+
+const ContinueNumberingIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 4h2M2 8h2M2 12h2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+    <path d="M7 4h7M7 8h7M7 12h7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+  </svg>
+);
+
 /**
  * Get icon for action
  */
@@ -388,6 +410,10 @@ function getActionIcon(action: TextContextAction): React.ReactNode {
       return <DeleteTableIcon />;
     case 'addComment':
       return <CommentIcon />;
+    case 'restartNumbering':
+      return <RestartNumberingIcon />;
+    case 'continueNumbering':
+      return <ContinueNumberingIcon />;
     case 'updateTableOfContents':
       return <UpdateTocIcon />;
     default:
@@ -852,6 +878,8 @@ export function getTextActionLabel(action: TextContextAction): string {
     deleteTable: defaultLocale.table.deleteTable,
     updateTableOfContents: defaultLocale.contextMenu.updateTableOfContents,
     addComment: 'Comment',
+    restartNumbering: 'Restart numbering at 1',
+    continueNumbering: 'Continue numbering',
   };
   return labels[action];
 }
@@ -880,6 +908,8 @@ export function getTextActionShortcut(action: TextContextAction): string {
     deleteTable: '',
     updateTableOfContents: '',
     addComment: '',
+    restartNumbering: '',
+    continueNumbering: '',
   };
   return shortcuts[action];
 }

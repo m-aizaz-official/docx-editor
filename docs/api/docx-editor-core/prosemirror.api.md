@@ -80,6 +80,9 @@ export const clearStyle: Command;
 // @public (undocumented)
 export const clearTextColor: Command;
 
+// @public (undocumented)
+export const continueNumbering: Command;
+
 // @public
 export function createDocumentContextPlugin(options?: Partial<DocumentContext>): Plugin_2;
 
@@ -233,6 +236,12 @@ export function getListInfo(state: EditorState): {
     numId: number;
     ilvl: number;
 } | null;
+
+// @public
+export function getListRestartState(state: EditorState): {
+    isNumberedList: boolean;
+    hasRestart: boolean;
+};
 
 // @public
 export function getMarkAttr(state: EditorState, markType: MarkType, attr: string): unknown | null;
@@ -509,6 +518,9 @@ export interface ResolvedParagraphStyle {
     paragraphFormatting?: ParagraphFormatting;
     runFormatting?: TextFormatting;
 }
+
+// @public (undocumented)
+export const restartNumbering: Command;
 
 // @public (undocumented)
 export const schema: prosemirror_model.Schema<any, any>;

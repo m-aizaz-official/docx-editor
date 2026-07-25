@@ -38,7 +38,10 @@ import { preserveTextFingerprint } from './preserveText';
 import { convertPMParagraph } from './fromProseDoc/paragraph';
 import { convertPMTable } from './fromProseDoc/tables';
 import { convertPMTextBox, convertPMTextBoxRun } from './fromProseDoc/textbox';
-import { collectNumberingFromPM } from './fromProseDoc/numbering';
+import {
+  collectNumberingFromPM,
+  mergeRestartOverridesIntoNumbering,
+} from './fromProseDoc/numbering';
 
 /**
  * Convert a ProseMirror document to our Document type
@@ -61,6 +64,10 @@ export function fromProseDoc(pmDoc: PMNode, baseDocument?: Document): Document {
         package: {
           ...baseDocument.package,
           document: documentBody,
+          // Back any editor-created numbering restarts (fresh numIds carrying a
+          // startOverride) with a w:num in the preserved numbering.xml so Word
+          // doesn't drop their markers.
+          numbering: mergeRestartOverridesIntoNumbering(baseDocument.package.numbering, pmDoc),
         },
       }
     : { package: { document: documentBody, numbering: collectNumberingFromPM(pmDoc) } };
