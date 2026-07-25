@@ -668,8 +668,11 @@ function fillLines(
   }
 
   // A paragraph always occupies at least one line — an empty one still shows a
-  // caret and still takes vertical space.
-  flush(lines.length === 0);
+  // caret and still takes vertical space. A paragraph that ENDS in a line break
+  // (a trailing Shift+Enter / `w:br`) must also render the empty line after that
+  // break, or the break appears to do nothing until content follows it.
+  const endsWithBreak = tokens.length > 0 && tokens[tokens.length - 1].kind === 'break';
+  flush(lines.length === 0 || endsWithBreak);
 
   return lines;
 }
