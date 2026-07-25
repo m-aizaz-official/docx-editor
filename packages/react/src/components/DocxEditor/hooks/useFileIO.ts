@@ -160,10 +160,34 @@ export function useFileIO({
     // Clone pages and remove transforms/shadows
     const pagesClone = pagesEl.cloneNode(true) as HTMLElement;
     pagesClone.style.cssText = 'display: block; margin: 0; padding: 0;';
+
+    // Each page prints on paper matching its own dimensions. A single
+    // `@page { size: auto }` forces Chrome to fit every page onto one paper
+    // size, so a document mixing portrait and landscape sections shrinks and
+    // left-aligns the narrower pages to fit the widest one (issue #1080). Named
+    // page rules keyed by px size keep every page 1:1 with its paper.
+    const pageSizeRules = new Map<string, string>();
+    const pageRuleCss: string[] = [];
     for (const page of Array.from(pagesClone.querySelectorAll('.layout-page'))) {
       const el = page as HTMLElement;
       el.style.boxShadow = 'none';
       el.style.margin = '0';
+      // The painter sets inline width/height in px; offsetWidth is 0 on the
+      // still-detached clone, so read the inline values first.
+      const w = Math.round(parseFloat(el.style.width) || el.offsetWidth);
+      const h = Math.round(parseFloat(el.style.height) || el.offsetHeight);
+      if (!w || !h) continue;
+      const key = `${w}x${h}`;
+      let name = pageSizeRules.get(key);
+      if (!name) {
+        name = `ep-print-page-${pageSizeRules.size}`;
+        pageSizeRules.set(key, name);
+        pageRuleCss.push(
+          `@page ${name} { size: ${(w / 96).toFixed(4)}in ${(h / 96).toFixed(4)}in; margin: 0; }`,
+          `.${name} { page: ${name}; }`
+        );
+      }
+      el.classList.add(name);
     }
 
     printWindow.document.write(`<!DOCTYPE html>
@@ -173,7 +197,8 @@ export function useFileIO({
 body { background: white; }
 .layout-page { break-after: page; }
 .layout-page:last-child { break-after: auto; }
-@page { margin: 0; size: auto; }
+@page { margin: 0; }
+${pageRuleCss.join('\n')}
 </style>
 </head><body></body></html>`);
 
