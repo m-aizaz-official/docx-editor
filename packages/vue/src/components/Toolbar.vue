@@ -223,6 +223,17 @@
     >
       <MaterialSymbol name="strikethrough_s" />
     </button>
+    <button
+      :title="t('formattingBar.formatPainter')"
+      :aria-label="t('formattingBar.formatPainter')"
+      :class="{ active: formatPainterActive }"
+      :data-active="formatPainterActive ? 'true' : undefined"
+      @mousedown.prevent
+      @click="$emit('format-painter')"
+      @dblclick="$emit('format-painter-sticky')"
+    >
+      <MaterialSymbol name="format_paint" />
+    </button>
 
     <!-- 7. Text color — Word-style split button + advanced picker (theme matrix) -->
     <ColorPicker
@@ -528,12 +539,16 @@ const props = defineProps<{
       When present, the style picker shows the document's real styles + names,
       matching React's Toolbar `documentStyles` prop. Falls back to presets. */
   documentStyles?: Style[];
+  /** Whether Format Painter is armed (drives the button's active state). */
+  formatPainterActive?: boolean;
 }>();
 
 const { t } = useTranslation();
 
 const emit = defineEmits<{
   (e: 'find-replace'): void;
+  (e: 'format-painter'): void;
+  (e: 'format-painter-sticky'): void;
   (e: 'insert-table'): void;
   (e: 'insert-image'): void;
   (e: 'insert-link'): void;

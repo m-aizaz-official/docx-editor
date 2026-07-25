@@ -113,6 +113,8 @@ export {
   removeTabMark,
   toggleBulletList,
   toggleNumberedList,
+  restartNumbering,
+  continueNumbering,
   increaseListLevel,
   decreaseListLevel,
   removeList,
@@ -120,6 +122,7 @@ export {
   getParagraphBidi,
   isInList,
   getListInfo,
+  getListRestartState,
   applyStyle,
   clearStyle,
   getStyleId,
@@ -197,3 +200,9 @@ export type { TocBlockInfo, TocHeading, TocInstruction, UpdateTableOfContentsOpt
 export { findStartPosForParaId } from './utils/findStartPosForParaId';
 export { findParagraphByParaId } from './utils/findParagraphByParaId';
 export { ensureParaIdsInState } from './extensions/features/ParaIdAllocatorExtension';
+export {
+  captureMarksFromSelection,
+  applyCapturedMarks,
+  hasCapturedFormatting,
+  type CapturedFormatting,
+} from './formatPainter';
