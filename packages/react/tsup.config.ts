@@ -1,4 +1,5 @@
 import { defineConfig } from 'tsup';
+import path from 'node:path';
 
 export default defineConfig({
   entry: {
@@ -19,8 +20,8 @@ export default defineConfig({
   // The rendering engine is intentionally not a public core subpath. Bundle
   // first-party adapter uses so published JS never imports those private paths.
   noExternal: [
-    /^@docx-editor\.dev\/core\/(?:editor|flow-model|painter-model|pagination-model)(?:\/|$)/,
-    '@docx-editor.dev/core/utils/removeHeaderFooterForSection',
+    /^@sofcom\/docx-editor-core\/(?:editor|flow-model|painter-model|pagination-model)(?:\/|$)/,
+    '@sofcom/docx-editor-core/utils/removeHeaderFooterForSection',
   ],
   external: [
     'react',
@@ -36,4 +37,10 @@ export default defineConfig({
     'prosemirror-view',
   ],
   injectStyle: false,
+  esbuildOptions(options) {
+    options.alias = {
+      ...(options.alias ?? {}),
+      '@sofcom/docx-editor-react/i18n-internal': path.resolve('src/i18n/internal.ts'),
+    };
+  },
 });

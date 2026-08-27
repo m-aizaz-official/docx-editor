@@ -8,13 +8,13 @@
 import * as React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger } from './Select';
 import { cn } from '../../lib/utils';
-import type { Style, StyleType, Theme } from '@docx-editor.dev/core/types/document';
+import type { Style, StyleType, Theme } from '@sofcom/docx-editor-core/types/document';
 import {
   getStylePreviewProps,
   resolveParagraphStyleOptions,
-} from '@docx-editor.dev/core/utils/stylePreview';
+} from '@sofcom/docx-editor-core/utils/stylePreview';
 import { useTranslation } from '../../i18n';
-import type { TranslationKey } from '@docx-editor.dev/i18n';
+import type { TranslationKey } from '@sofcom/docx-editor-react/i18n-internal';
 
 // ============================================================================
 // TYPES

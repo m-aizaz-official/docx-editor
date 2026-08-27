@@ -18,16 +18,16 @@ import {
   getListRestartState,
   restartNumbering as pmRestartNumbering,
   continueNumbering as pmContinueNumbering,
-} from '@docx-editor.dev/core/prosemirror';
-import type { PageLayout } from '@docx-editor.dev/core/pagination-model';
+} from '@sofcom/docx-editor-core/prosemirror';
+import type { PageLayout } from '@sofcom/docx-editor-core/pagination-model';
 import {
   setImageWrapType,
   type ImageLayoutTarget,
-} from '@docx-editor.dev/core/prosemirror/commands';
-import type { WrapType } from '@docx-editor.dev/core/docx/wrapTypes';
-import { en as defaultLocale } from '@docx-editor.dev/i18n';
+} from '@sofcom/docx-editor-core/prosemirror/commands';
+import type { WrapType } from '@sofcom/docx-editor-core/docx/wrapTypes';
+import { en as defaultLocale } from '@sofcom/docx-editor-react/i18n-internal';
 import { useTranslation } from '../../../i18n';
-import type { Translations } from '@docx-editor.dev/i18n';
+import type { Translations } from '@sofcom/docx-editor-react/i18n-internal';
 import { useImageContextMenu } from '../../ImageContextMenu';
 import { type TextContextAction, type TextContextMenuItem } from '../../TextContextMenu';
 import { findSelectionYPosition } from '../internals/pmAnchors';

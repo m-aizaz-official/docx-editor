@@ -10,11 +10,11 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import type { CSSProperties } from 'react';
-import type { Watermark } from '@docx-editor.dev/core/types/document';
+import type { Watermark } from '@sofcom/docx-editor-core/types/document';
 import {
   pictureWatermarkDisplayEmu,
   DEFAULT_WATERMARK_PRESETS,
-} from '@docx-editor.dev/core/types/document';
+} from '@sofcom/docx-editor-core/types/document';
 import { useTranslation } from '../../i18n';
 
 export interface WatermarkDialogProps {

@@ -21,18 +21,18 @@ import {
   addRepeatingSectionItemTr,
   removeRepeatingSectionItemTr,
   type PMContentControl,
-} from '@docx-editor.dev/core/prosemirror';
+} from '@sofcom/docx-editor-core/prosemirror';
 import {
   syncTocRefreshButtons,
   createTocRefreshSyncCache,
   cleanupTocRefreshButtons,
   applyTocRefreshProxyFocus,
   getTocRefreshDescriptors,
-} from '@docx-editor.dev/core/painter-model';
+} from '@sofcom/docx-editor-core/painter-model';
 import type {
   PaintedPagesReadyEvent,
   TocRefreshDescriptor,
-} from '@docx-editor.dev/core/painter-model';
+} from '@sofcom/docx-editor-core/painter-model';
 
 const WIDGET_SELECTOR = '.layout-sdt-widget, .layout-inline-sdt-widget';
 const TOC_REFRESH_SELECTOR = '.layout-toc-refresh';

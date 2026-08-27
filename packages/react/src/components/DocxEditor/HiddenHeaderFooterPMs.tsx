@@ -38,23 +38,23 @@ import {
   schema,
   createDocumentStylesPlugin,
   createDocumentContextPlugin,
-} from '@docx-editor.dev/core/prosemirror';
+} from '@sofcom/docx-editor-core/prosemirror';
 import {
   createSuggestionModePlugin,
   setSuggestionMode,
-} from '@docx-editor.dev/core/prosemirror/plugins';
+} from '@sofcom/docx-editor-core/prosemirror/plugins';
 import {
   headerFooterToProseDoc,
   proseDocToBlocks,
-} from '@docx-editor.dev/core/prosemirror/conversion';
-import { createStarterKit } from '@docx-editor.dev/core/prosemirror/extensions';
-import { ExtensionManager } from '@docx-editor.dev/core/prosemirror/extensions';
+} from '@sofcom/docx-editor-core/prosemirror/conversion';
+import { createStarterKit } from '@sofcom/docx-editor-core/prosemirror/extensions';
+import { ExtensionManager } from '@sofcom/docx-editor-core/prosemirror/extensions';
 import type {
   Document,
   HeaderFooter,
   StyleDefinitions,
   Theme,
-} from '@docx-editor.dev/core/types/document';
+} from '@sofcom/docx-editor-core/types/document';
 
 import 'prosemirror-view/style/prosemirror.css';
 

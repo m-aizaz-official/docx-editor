@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "@docx-editor.dev/agents": "workspace:*",
-    "@docx-editor.dev/core": "workspace:*",
-    "@docx-editor.dev/react": "workspace:*",
+    "@sofcom/docx-editor-core": "workspace:*",
+    "@sofcom/docx-editor-react": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

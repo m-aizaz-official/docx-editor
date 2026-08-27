@@ -1,13 +1,13 @@
 /**
- * @docx-editor.dev/react/dialogs
+ * @sofcom/docx-editor-react/dialogs
  *
  * Modal dialogs for hyperlinks, find/replace, paste-special, page setup,
  * and keyboard shortcuts. Pair with the hooks under
- * `@docx-editor.dev/react/hooks` when wiring custom UI.
+ * `@sofcom/docx-editor-react/hooks` when wiring custom UI.
  *
  * @example
  * ```tsx
- * import { HyperlinkDialog, FindReplaceDialog } from '@docx-editor.dev/react/dialogs';
+ * import { HyperlinkDialog, FindReplaceDialog } from '@sofcom/docx-editor-react/dialogs';
  * ```
  *
  * @packageDocumentation

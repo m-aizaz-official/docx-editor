@@ -6,10 +6,10 @@
  */
 
 import React, { useEffect, useRef, useCallback, useState } from 'react';
-import type { AIAction, SelectionContext } from '@docx-editor.dev/core/types/agentApi';
-import { getActionDescription, DEFAULT_AI_ACTIONS } from '@docx-editor.dev/core/types/agentApi';
+import type { AIAction, SelectionContext } from '@sofcom/docx-editor-core/types/agentApi';
+import { getActionDescription, DEFAULT_AI_ACTIONS } from '@sofcom/docx-editor-core/types/agentApi';
 import { useTranslation } from '../i18n';
-import type { TranslationKey } from '@docx-editor.dev/i18n';
+import type { TranslationKey } from '@sofcom/docx-editor-react/i18n-internal';
 import { Z_INDEX } from '../styles/zIndex';
 
 const AI_ACTION_KEY_MAP: Record<AIAction, TranslationKey> = {

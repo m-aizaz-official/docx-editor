@@ -1,12 +1,12 @@
 /**
- * @docx-editor.dev/react/hooks
+ * @sofcom/docx-editor-react/hooks
  *
  * React hooks for editor history, table selection, find/replace, autosave,
  * clipboard, and zoom. Use alongside the main `DocxEditor` component.
  *
  * @example
  * ```tsx
- * import { useAutoSave, useFindReplace } from '@docx-editor.dev/react/hooks';
+ * import { useAutoSave, useFindReplace } from '@sofcom/docx-editor-react/hooks';
  * ```
  *
  * @packageDocumentation

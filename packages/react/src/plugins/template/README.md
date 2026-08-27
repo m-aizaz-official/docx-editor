@@ -34,9 +34,9 @@ Both share the same `Document` model — they don't depend on each other directl
 ## Usage
 
 ```tsx
-import { DocxEditor } from '@docx-editor.dev/react';
-import { PluginHost, templatePlugin } from '@docx-editor.dev/react/plugin-api';
-import '@docx-editor.dev/react/styles.css';
+import { DocxEditor } from '@sofcom/docx-editor-react';
+import { PluginHost, templatePlugin } from '@sofcom/docx-editor-react/plugin-api';
+import '@sofcom/docx-editor-react/styles.css';
 
 function Editor({ file }: { file: ArrayBuffer }) {
   return (
@@ -52,7 +52,7 @@ function Editor({ file }: { file: ArrayBuffer }) {
 To fill a template with data (outside the editor):
 
 ```tsx
-import { processTemplate } from '@docx-editor.dev/core/headless';
+import { processTemplate } from '@sofcom/docx-editor-core/headless';
 
 const filled = await processTemplate(docxBuffer, {
   name: 'Jane Doe',

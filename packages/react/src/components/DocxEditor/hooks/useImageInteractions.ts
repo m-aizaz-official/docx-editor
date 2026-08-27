@@ -16,13 +16,13 @@ import { useCallback } from 'react';
 import { NodeSelection } from 'prosemirror-state';
 import type { EditorView } from 'prosemirror-view';
 
-import { pixelsToEmu } from '@docx-editor.dev/core/utils';
+import { pixelsToEmu } from '@sofcom/docx-editor-core/utils';
 import {
   isFloatingImage,
   commitImageResize,
   commitImageFloatMove,
   commitImageInlineMove,
-} from '@docx-editor.dev/core/prosemirror/imageCommit';
+} from '@sofcom/docx-editor-core/prosemirror/imageCommit';
 
 import type { OffscreenEditorHostRef } from '../OffscreenEditorHost';
 

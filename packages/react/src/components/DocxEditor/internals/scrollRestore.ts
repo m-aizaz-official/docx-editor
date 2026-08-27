@@ -18,8 +18,8 @@
  *     scroll position (top / scrollHeight ratio). Coarse but always works.
  */
 
-import { findBodyPmAnchor } from '@docx-editor.dev/core/flow-model';
-import type { RenderPagesUpdateKind } from '@docx-editor.dev/core/painter-model';
+import { findBodyPmAnchor } from '@sofcom/docx-editor-core/flow-model';
+import type { RenderPagesUpdateKind } from '@sofcom/docx-editor-core/painter-model';
 
 import { findPaintedPmStartAtOrBefore } from './scrollUtils';
 

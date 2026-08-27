@@ -4,4 +4,4 @@ export {
   buildReportIssueUrl,
   openReportIssue,
   type ReportIssueEnv,
-} from '@docx-editor.dev/core/utils/reportIssue';
+} from '@sofcom/docx-editor-core/utils/reportIssue';

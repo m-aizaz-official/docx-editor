@@ -26,7 +26,7 @@ export default defineConfig(async () => {
         // Resolve package imports to source for live development
         // Order matters: more-specific prefixes before less-specific ones
         {
-          find: '@docx-editor.dev/react',
+          find: '@sofcom/docx-editor-react',
           replacement: path.join(monorepoRoot, 'packages/react/src/index.ts'),
         },
         {
@@ -46,25 +46,25 @@ export default defineConfig(async () => {
           replacement: path.join(monorepoRoot, 'packages/agents/src/index.ts'),
         },
         {
-          find: '@docx-editor.dev/core/headless',
+          find: '@sofcom/docx-editor-core/headless',
           replacement: path.join(monorepoRoot, 'packages/core/src/headless.ts'),
         },
         {
-          find: '@docx-editor.dev/core/core-plugins',
+          find: '@sofcom/docx-editor-core/core-plugins',
           replacement: path.join(monorepoRoot, 'packages/core/src/core-plugins/index.ts'),
         },
         {
-          find: '@docx-editor.dev/core/mcp',
+          find: '@sofcom/docx-editor-core/mcp',
           replacement: path.join(monorepoRoot, 'packages/core/src/mcp/index.ts'),
         },
-        // Wildcard alias for deep core imports (e.g. @docx-editor.dev/core/utils/docxInput)
+        // Wildcard alias for deep core imports (e.g. @sofcom/docx-editor-core/utils/docxInput)
         {
-          find: /^@docx-editor\.dev\/core\/(.+)/,
+          find: /^@sofcom\/docx-editor-core\/(.+)/,
           replacement: path.join(monorepoRoot, 'packages/core/src/$1'),
         },
-        // Exact match for bare @docx-editor.dev/core (must come AFTER the prefix match above)
+        // Exact match for bare @sofcom/docx-editor-core (must come AFTER the prefix match above)
         {
-          find: /^@docx-editor\.dev\/core$/,
+          find: /^@sofcom\/docx-editor-core$/,
           replacement: path.join(monorepoRoot, 'packages/core/src/core.ts'),
         },
         { find: '@', replacement: path.join(monorepoRoot, 'packages/react/src') },

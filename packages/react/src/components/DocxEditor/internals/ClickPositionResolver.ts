@@ -2,4 +2,4 @@
 export {
   ClickPositionResolver,
   type PositionLookupResult,
-} from '@docx-editor.dev/core/prosemirror/utils/ClickPositionResolver';
+} from '@sofcom/docx-editor-core/prosemirror/utils/ClickPositionResolver';

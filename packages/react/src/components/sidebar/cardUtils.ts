@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { getAvatarColor } from '@docx-editor.dev/core/utils/comments';
+import { getAvatarColor } from '@sofcom/docx-editor-core/utils/comments';
 
 // Re-export the framework-agnostic helpers so existing React imports keep
 // working; the canonical implementations live in core.
@@ -10,7 +10,7 @@ export {
   getAvatarColor,
   truncateText,
   type TrackedChangeEntry,
-} from '@docx-editor.dev/core/utils/comments';
+} from '@sofcom/docx-editor-core/utils/comments';
 
 // ─── React-only style helpers below (CSSProperties live next to JSX) ──────
 

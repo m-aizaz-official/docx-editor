@@ -4,4 +4,4 @@ export {
   type EditorInterface,
   type InputEventCallback,
   type PointerEventHandlerOptions,
-} from '@docx-editor.dev/core/prosemirror/utils/PointerEventHandler';
+} from '@sofcom/docx-editor-core/prosemirror/utils/PointerEventHandler';

@@ -33,6 +33,7 @@ export default defineConfig([
       'types/document': 'src/types/document.ts',
       'types/content': 'src/types/content.ts',
       'types/agentApi': 'src/types/agentApi.ts',
+      math: 'src/math/index.ts',
       'plugin-api/index': 'src/plugin-api/index.ts',
       'plugin-api/RenderedDomContext': 'src/plugin-api/RenderedDomContext.ts',
       'plugin-api/resolveItemPositions': 'src/plugin-api/resolveItemPositions.ts',

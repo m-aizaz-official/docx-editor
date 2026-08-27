@@ -8,7 +8,7 @@
 
 import { useCallback, useMemo } from 'react';
 import type { EditorView } from 'prosemirror-view';
-import { mathAttrsFromLinear } from '@docx-editor.dev/core/math';
+import { mathAttrsFromLinear } from '@sofcom/docx-editor-core/math';
 import { useInsertSymbolDialog } from '../../dialogs/InsertSymbolDialog';
 import { useEquationDialog } from '../../dialogs/EquationDialog';
 

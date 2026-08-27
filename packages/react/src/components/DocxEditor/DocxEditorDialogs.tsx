@@ -5,8 +5,8 @@ import type {
   EndnoteProperties,
   SectionProperties,
   Watermark,
-} from '@docx-editor.dev/core/types/document';
-import { setTableProperties } from '@docx-editor.dev/core/prosemirror/commands';
+} from '@sofcom/docx-editor-core/types/document';
+import { setTableProperties } from '@sofcom/docx-editor-core/prosemirror/commands';
 import type { EditorView } from 'prosemirror-view';
 import type { useFindReplace } from '../../hooks/useFindReplace';
 import type { useHyperlinkDialog, HyperlinkData } from '../dialogs/HyperlinkDialog';

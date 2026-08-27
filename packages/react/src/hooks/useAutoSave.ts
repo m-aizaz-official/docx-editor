@@ -13,9 +13,9 @@ import {
   getAutoSaveStorageSize,
   formatStorageSize,
   isAutoSaveSupported,
-} from '@docx-editor.dev/core';
-import type { AutoSaveStatus, SavedDocumentData } from '@docx-editor.dev/core';
-import type { Document } from '@docx-editor.dev/core/types/document';
+} from '@sofcom/docx-editor-core';
+import type { AutoSaveStatus, SavedDocumentData } from '@sofcom/docx-editor-core';
+import type { Document } from '@sofcom/docx-editor-core/types/document';
 
 // ============================================================================
 // RE-EXPORT TYPES AND UTILITIES (backwards compat)

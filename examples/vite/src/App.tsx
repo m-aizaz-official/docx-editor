@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react';
-import { createEmptyDocument, findStartPosForParaId, parseDocx } from '@docx-editor.dev/core';
-import { setSuggestionMode } from '@docx-editor.dev/core/prosemirror/plugins';
+import { createEmptyDocument, findStartPosForParaId, parseDocx } from '@sofcom/docx-editor-core';
+import { setSuggestionMode } from '@sofcom/docx-editor-core/prosemirror/plugins';
 import {
   acceptChangeById,
   rejectChangeById,
@@ -9,9 +9,9 @@ import {
   addRowBelow,
   deleteRow,
   insertTable,
-} from '@docx-editor.dev/core/prosemirror/commands';
-import { loadFont } from '@docx-editor.dev/core/utils';
-import { DocxEditor, type DocxEditorRef } from '@docx-editor.dev/react';
+} from '@sofcom/docx-editor-core/prosemirror/commands';
+import { loadFont } from '@sofcom/docx-editor-core/utils';
+import { DocxEditor, type DocxEditorRef } from '@sofcom/docx-editor-react';
 import { AgentChatLog, type AgentMessage, getToolDisplayName } from '@docx-editor.dev/agents/react';
 import { ExampleSwitcher } from '../../shared/ExampleSwitcher';
 import { AdapterSwitcher } from '../../shared/AdapterSwitcher';
@@ -260,7 +260,7 @@ export function App() {
 
   // E2E hook: ?googleFont=Pacifico demonstrates the existing Google Fonts
   // path. The `fonts` prop is for self-hosted faces; for Google Fonts call
-  // `loadFont(name)` from `@docx-editor.dev/core/utils` directly.
+  // `loadFont(name)` from `@sofcom/docx-editor-core/utils` directly.
   const googleFontName = useMemo(() => {
     if (typeof window === 'undefined') return null;
     return new URLSearchParams(window.location.search).get('googleFont');

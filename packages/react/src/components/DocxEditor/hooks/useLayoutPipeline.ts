@@ -19,13 +19,13 @@ import type {
   ContentNode,
   LayoutMetrics,
   PageLayout,
-} from '@docx-editor.dev/core/pagination-model';
+} from '@sofcom/docx-editor-core/pagination-model';
 import {
   getColumns,
   getMargins,
   getPageSize,
   getVisualScrollHeight,
-} from '@docx-editor.dev/core/flow-model';
+} from '@sofcom/docx-editor-core/flow-model';
 import type { Node as PMNode } from 'prosemirror-model';
 import {
   LayoutPainter,
@@ -34,20 +34,20 @@ import {
   type NodeLookup,
   type FootnoteRenderItem,
   type RenderPageOptions,
-} from '@docx-editor.dev/core/painter-model';
+} from '@sofcom/docx-editor-core/painter-model';
 import {
   computeLayout,
   createLayoutScheduler,
   type LayoutScheduler,
-} from '@docx-editor.dev/core/editor';
-import { findVerticalScrollParentOrRoot } from '@docx-editor.dev/core/utils/findVerticalScrollParent';
+} from '@sofcom/docx-editor-core/editor';
+import { findVerticalScrollParentOrRoot } from '@sofcom/docx-editor-core/utils/findVerticalScrollParent';
 import type {
   Document,
   HeaderFooter,
   SectionProperties,
   StyleDefinitions,
   Theme,
-} from '@docx-editor.dev/core/types/document';
+} from '@sofcom/docx-editor-core/types/document';
 
 import type { OffscreenEditorHostRef } from '../OffscreenEditorHost';
 import { computeAnchorPositions } from '../internals/sidebarAnchorPositions';
@@ -65,7 +65,7 @@ import {
 import {
   createPaintedPagesGuard,
   type PaintedPagesGuard,
-} from '@docx-editor.dev/core/internal/paintedPagesGuard';
+} from '@sofcom/docx-editor-core/internal/paintedPagesGuard';
 import { usePaintedPagesGuardLifecycle } from './usePaintedPagesGuardLifecycle';
 
 export interface UseLayoutPipelineOptions {
@@ -238,7 +238,7 @@ export function useLayoutPipeline(opts: UseLayoutPipelineOptions): UseLayoutPipe
       try {
         // Steps 1-3 (PM doc → nodes → metrics → HF resolve → margin extend →
         // page layout → footnote items) are the shared compute pass, lifted to
-        // `@docx-editor.dev/core/editor`. Paint + scroll/events stay here.
+        // `@sofcom/docx-editor-core/editor`. Paint + scroll/events stay here.
         const {
           nodes: newNodes,
           metrics: newMetrics,

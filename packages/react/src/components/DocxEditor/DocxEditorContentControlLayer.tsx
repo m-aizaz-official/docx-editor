@@ -1,6 +1,6 @@
 import { useCallback, type RefObject, type ReactElement } from 'react';
-import type { Translations } from '@docx-editor.dev/i18n';
-import { en as defaultLocale } from '@docx-editor.dev/i18n';
+import type { Translations } from '@sofcom/docx-editor-react/i18n-internal';
+import { en as defaultLocale } from '@sofcom/docx-editor-react/i18n-internal';
 import { ContentControlWidgets } from './ContentControlWidgets';
 import type { PagedEditorRef } from './PagedEditor';
 

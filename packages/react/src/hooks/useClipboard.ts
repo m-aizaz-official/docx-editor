@@ -12,9 +12,9 @@ import {
   parseClipboardHtml,
   runsToClipboardContent,
   type ParsedClipboardContent,
-} from '@docx-editor.dev/core/utils';
-import { getSelectionRuns, createSelectionFromDOM } from '@docx-editor.dev/core';
-import type { ClipboardSelection, Theme } from '@docx-editor.dev/core';
+} from '@sofcom/docx-editor-core/utils';
+import { getSelectionRuns, createSelectionFromDOM } from '@sofcom/docx-editor-core';
+import type { ClipboardSelection, Theme } from '@sofcom/docx-editor-core';
 
 // ============================================================================
 // RE-EXPORTS (backwards compat)

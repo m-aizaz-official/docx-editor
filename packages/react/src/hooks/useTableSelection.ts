@@ -11,8 +11,8 @@ import {
   getTableFromDocument,
   updateTableInDocument,
   deleteTableFromDocument,
-} from '@docx-editor.dev/core';
-import type { Document, Table } from '@docx-editor.dev/core/types/document';
+} from '@sofcom/docx-editor-core';
+import type { Document, Table } from '@sofcom/docx-editor-core/types/document';
 import type {
   TableContext,
   TableSelection,
@@ -41,8 +41,8 @@ export {
   getTableFromDocument,
   updateTableInDocument,
   deleteTableFromDocument,
-} from '@docx-editor.dev/core';
-export type { CellCoordinates } from '@docx-editor.dev/core';
+} from '@sofcom/docx-editor-core';
+export type { CellCoordinates } from '@sofcom/docx-editor-core';
 
 // ============================================================================
 // TYPES

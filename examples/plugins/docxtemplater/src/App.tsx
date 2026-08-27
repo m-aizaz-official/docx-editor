@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { DocxEditor, type DocxEditorRef } from '@docx-editor.dev/react';
-import { PluginHost, templatePlugin } from '@docx-editor.dev/react/plugin-api';
-import { createEmptyDocument, type Document } from '@docx-editor.dev/core';
+import { DocxEditor, type DocxEditorRef } from '@sofcom/docx-editor-react';
+import { PluginHost, templatePlugin } from '@sofcom/docx-editor-react/plugin-api';
+import { createEmptyDocument, type Document } from '@sofcom/docx-editor-core';
 
 function createTemplateDocument(): Document {
   const doc = createEmptyDocument();
@@ -264,7 +264,7 @@ export function App() {
             rel="noopener noreferrer"
             style={styles.titleLink}
           >
-            <h1 style={styles.title}>@docx-editor.dev/react</h1>
+            <h1 style={styles.title}>@sofcom/docx-editor-react</h1>
           </a>
           <span style={styles.badge}>Docxtemplater Plugin</span>
           {fileName && <span style={styles.fileName}>{fileName}</span>}

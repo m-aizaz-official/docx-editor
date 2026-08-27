@@ -5,8 +5,8 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@docx-editor.dev/core"><img src="https://img.shields.io/npm/v/@docx-editor.dev/core.svg?style=flat-square&color=3B5BDB" alt="npm version" /></a>
-  <a href="https://www.npmjs.com/package/@docx-editor.dev/core"><img src="https://img.shields.io/npm/dm/@docx-editor.dev/core.svg?style=flat-square&color=3B5BDB" alt="npm downloads" /></a>
+  <a href="https://www.npmjs.com/package/@sofcom/docx-editor-core"><img src="https://img.shields.io/npm/v/@sofcom/docx-editor-core.svg?style=flat-square&color=3B5BDB" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/@sofcom/docx-editor-core"><img src="https://img.shields.io/npm/dm/@sofcom/docx-editor-core.svg?style=flat-square&color=3B5BDB" alt="npm downloads" /></a>
   <a href="https://github.com/eigenpal/docx-editor/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-Apache_2.0-blue.svg?style=flat-square&color=3B5BDB" alt="license" /></a>
   <a href="https://docx-editor.dev/editor"><img src="https://img.shields.io/badge/Live_Demo-3B5BDB?style=flat-square&logo=vercel&logoColor=white" alt="Demo" /></a>
   <a href="https://www.docx-editor.dev/docs"><img src="https://img.shields.io/badge/Docs-3B5BDB?style=flat-square&logo=readthedocs&logoColor=white" alt="Documentation" /></a>
@@ -17,22 +17,14 @@ Open-source WYSIWYG `.docx` editor for React and Vue with canonical OOXML, track
 ## Quick Start
 
 ```bash
-npm install @docx-editor.dev/react
+npm install @sofcom/docx-editor-react @sofcom/docx-editor-core
 ```
 
 See the [React quick start](#react) below.
 
 ```bash
-npm install @docx-editor.dev/vue
+npm install @sofcom/docx-editor-react @sofcom/docx-editor-core
 ```
-
-See the [Vue quick start](#vue) below.
-
-```bash
-npm install @docx-editor.dev/nuxt
-```
-
-See the [Nuxt quick start](#nuxt) below.
 
 <p align="center">
   <a href="https://docx-editor.dev/editor">
@@ -42,23 +34,23 @@ See the [Nuxt quick start](#nuxt) below.
 
 ## Packages
 
-| Package                                                                            | Description                                                                                                                                | Docs                                                  |
-| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- |
-| [`@docx-editor.dev/react`](https://www.npmjs.com/package/@docx-editor.dev/react)   | <img src="https://cdn.simpleicons.org/react/61DAFB" width="20" align="middle" /> &nbsp; React adapter. Toolbar, paged editor, plugins.     | [Docs](https://www.docx-editor.dev/docs/1.x/react)    |
-| [`@docx-editor.dev/vue`](https://www.npmjs.com/package/@docx-editor.dev/vue)       | <img src="https://cdn.simpleicons.org/vuedotjs/4FC08D" width="20" align="middle" /> &nbsp; Vue 3 adapter. Toolbar, paged editor, plugins.  | [Docs](https://www.docx-editor.dev/docs/1.x/vue)      |
-| [`@docx-editor.dev/nuxt`](https://www.npmjs.com/package/@docx-editor.dev/nuxt)     | <img src="https://cdn.simpleicons.org/nuxt/00DC82" width="20" align="middle" /> &nbsp; Nuxt 3 & 4 module wrapping the Vue adapter.         | [Docs](https://www.docx-editor.dev/docs/1.x/vue/nuxt) |
-| [`@docx-editor.dev/core`](https://www.npmjs.com/package/@docx-editor.dev/core)     | Framework-agnostic core: OOXML parser, serializer, layout engine, ProseMirror schema. Depend on this if you fork the React or Vue adapter. | [Docs](https://www.docx-editor.dev/docs/1.x/core)     |
-| [`@docx-editor.dev/i18n`](https://www.npmjs.com/package/@docx-editor.dev/i18n)     | Shared locale strings and types consumed by both adapters.                                                                                 | [Docs](https://www.docx-editor.dev/docs/1.x/i18n)     |
-| [`@docx-editor.dev/agents`](https://www.npmjs.com/package/@docx-editor.dev/agents) | Agent SDK and chat UI: framework-agnostic bridge, MCP server, AI SDK adapters, plus UI components.                                         | [Docs](https://www.docx-editor.dev/docs/1.x/agents)   |
+| Package                                                                                | Description                                                                                                                               | Docs                                                  |
+| -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| [`@sofcom/docx-editor-react`](https://www.npmjs.com/package/@sofcom/docx-editor-react) | <img src="https://cdn.simpleicons.org/react/61DAFB" width="20" align="middle" /> &nbsp; React adapter. Toolbar, paged editor, plugins.    | [Docs](https://www.docx-editor.dev/docs/1.x/react)    |
+| [`@docx-editor.dev/vue`](https://www.npmjs.com/package/@docx-editor.dev/vue)           | <img src="https://cdn.simpleicons.org/vuedotjs/4FC08D" width="20" align="middle" /> &nbsp; Vue 3 adapter. Toolbar, paged editor, plugins. | [Docs](https://www.docx-editor.dev/docs/1.x/vue)      |
+| [`@docx-editor.dev/nuxt`](https://www.npmjs.com/package/@docx-editor.dev/nuxt)         | <img src="https://cdn.simpleicons.org/nuxt/00DC82" width="20" align="middle" /> &nbsp; Nuxt 3 & 4 module wrapping the Vue adapter.        | [Docs](https://www.docx-editor.dev/docs/1.x/vue/nuxt) |
+| [`@sofcom/docx-editor-core`](https://www.npmjs.com/package/@sofcom/docx-editor-core)   | Framework-agnostic core: OOXML parser, serializer, layout engine, ProseMirror schema.                                                     | [Docs](https://www.docx-editor.dev/docs/1.x/core)     |
+| [`@docx-editor.dev/i18n`](https://www.npmjs.com/package/@docx-editor.dev/i18n)         | Shared locale strings and types consumed by both adapters.                                                                                | [Docs](https://www.docx-editor.dev/docs/1.x/i18n)     |
+| [`@docx-editor.dev/agents`](https://www.npmjs.com/package/@docx-editor.dev/agents)     | Agent SDK and chat UI: framework-agnostic bridge, MCP server, AI SDK adapters, plus UI components.                                        | [Docs](https://www.docx-editor.dev/docs/1.x/agents)   |
 
-> **Forking the adapter?** Keep your fork thin. Depend on `@docx-editor.dev/core` directly so parser, serializer, and rendering fixes land in your build automatically, without backporting each upstream change by hand.
+The React adapter depends on `@sofcom/docx-editor-core`; Core has no React or ReactDOM dependency.
 
 ## React
 
 ```tsx
 import { useState } from 'react';
-import { DocxEditor } from '@docx-editor.dev/react';
-import '@docx-editor.dev/react/styles.css';
+import { DocxEditor } from '@sofcom/docx-editor-react';
+import '@sofcom/docx-editor-react/styles.css';
 
 export function App() {
   const [buffer, setBuffer] = useState<ArrayBuffer | null>(null);

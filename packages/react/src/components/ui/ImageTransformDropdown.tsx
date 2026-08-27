@@ -4,7 +4,7 @@
 
 import { IconGridDropdown, type IconGridOption } from './IconGridDropdown';
 import { useTranslation } from '../../i18n';
-import type { TranslationKey } from '@docx-editor.dev/i18n';
+import type { TranslationKey } from '@sofcom/docx-editor-react/i18n-internal';
 
 type TransformAction = 'rotateCW' | 'rotateCCW' | 'flipH' | 'flipV';
 

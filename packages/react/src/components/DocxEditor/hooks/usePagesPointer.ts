@@ -24,7 +24,7 @@ import { NodeSelection, TextSelection } from 'prosemirror-state';
 import { CellSelection } from 'prosemirror-tables';
 import type { EditorView } from 'prosemirror-view';
 
-import type { CaretPosition, SelectionBox } from '@docx-editor.dev/core/flow-model';
+import type { CaretPosition, SelectionBox } from '@sofcom/docx-editor-core/flow-model';
 import {
   pointerToDocPos,
   resolveDomPosition,
@@ -33,31 +33,31 @@ import {
   resolveFragmentTarget,
   resolveTableCellTarget,
   TABLE_INSERT_HIDE_DELAY_MS as TABLE_INSERT_HIDE_DELAY,
-} from '@docx-editor.dev/core/flow-model';
+} from '@sofcom/docx-editor-core/flow-model';
 import type {
   ContentNode,
   LayoutMetrics,
   PageLayout,
-} from '@docx-editor.dev/core/pagination-model';
-import { addColumnRight, addRowBelow } from '@docx-editor.dev/core/prosemirror';
+} from '@sofcom/docx-editor-core/pagination-model';
+import { addColumnRight, addRowBelow } from '@sofcom/docx-editor-core/prosemirror';
 import {
   captureInlinePositionEmu,
   findImageElement as coreFindImageElement,
   pointerTargetResolveImage,
-} from '@docx-editor.dev/core/painter-model';
-import type { WrapType } from '@docx-editor.dev/core/docx/wrapTypes';
-import { findWordBoundariesForPointer } from '@docx-editor.dev/core/utils';
+} from '@sofcom/docx-editor-core/painter-model';
+import type { WrapType } from '@sofcom/docx-editor-core/docx/wrapTypes';
+import { findWordBoundariesForPointer } from '@sofcom/docx-editor-core/utils';
 import type { HeaderFooterClickTarget } from './useHeaderFooterEditing';
 
 import type { OffscreenEditorHostRef } from '../OffscreenEditorHost';
 import type { ImageSelectionInfo } from '../overlays/ImageSelectionOverlay';
 import { useDragAutoScroll } from '../../../hooks/useDragAutoScroll';
 import { useTableResizeState } from './useTableResizeState';
-import { readCurrentPaintedPages } from '@docx-editor.dev/core/internal/paintedPagesGuard';
+import { readCurrentPaintedPages } from '@sofcom/docx-editor-core/internal/paintedPagesGuard';
 import {
   createCellDragTracker,
   findCellPosFromPmPos as coreFindCellPosFromPmPos,
-} from '@docx-editor.dev/core/prosemirror/cellDragSelection';
+} from '@sofcom/docx-editor-core/prosemirror/cellDragSelection';
 
 interface TableInsertButtonState {
   type: 'row' | 'column';

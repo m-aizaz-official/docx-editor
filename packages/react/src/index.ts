@@ -1,15 +1,15 @@
 /**
- * @docx-editor.dev/react
+ * @sofcom/docx-editor-react
  *
  * Curated root entry for the documented React editor API. Advanced surfaces
  * stay public through explicit subpaths:
- * - `@docx-editor.dev/react/ui`
- * - `@docx-editor.dev/react/dialogs`
- * - `@docx-editor.dev/react/hooks`
- * - `@docx-editor.dev/react/plugin-api`
+ * - `@sofcom/docx-editor-react/ui`
+ * - `@sofcom/docx-editor-react/dialogs`
+ * - `@sofcom/docx-editor-react/hooks`
+ * - `@sofcom/docx-editor-react/plugin-api`
  *
- * Framework-agnostic document utilities live in `@docx-editor.dev/core`.
- * Agent/MCP surfaces live in `@docx-editor.dev/agents`.
+ * Framework-agnostic document utilities live in `@sofcom/docx-editor-core`.
+ * Agent panel support is bundled into the React adapter.
  *
  * @packageDocumentation
  * @public
@@ -26,16 +26,16 @@ export {
 } from './components/DocxEditor';
 export { renderAsync, type RenderAsyncOptions, type DocxEditorHandle } from './renderAsync';
 
-// Document factory helpers — re-exported from `@docx-editor.dev/core` so
+// Document factory helpers — re-exported from `@sofcom/docx-editor-core` so
 // the common "spawn a blank editor" affordance is available without forcing
 // consumers to add `-core` to their dependency tree alongside `-react`.
 export {
   createEmptyDocument,
   createDocumentWithText,
   type CreateEmptyDocumentOptions,
-} from '@docx-editor.dev/core';
+} from '@sofcom/docx-editor-core';
 
 // i18n contract — runtime only. Locale string types (LocaleStrings,
 // Translations, PartialLocaleStrings, TranslationKey) live in
-// `@docx-editor.dev/i18n`; import them from there.
+// Translation types are internal to the React adapter and bundled with it.
 export { LocaleProvider, useTranslation, type LocaleProviderProps } from './i18n';

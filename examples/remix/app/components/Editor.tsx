@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { DocxEditor, type DocxEditorRef } from '@docx-editor.dev/react';
-import { createEmptyDocument, type Document } from '@docx-editor.dev/core';
+import { DocxEditor, type DocxEditorRef } from '@sofcom/docx-editor-react';
+import { createEmptyDocument, type Document } from '@sofcom/docx-editor-core';
 import { ExampleSwitcher } from '../../../shared/ExampleSwitcher';
 import { GitHubBadge } from '../../../shared/GitHubBadge';
 

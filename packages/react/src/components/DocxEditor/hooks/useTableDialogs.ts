@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
-import type { Document } from '@docx-editor.dev/core/types/document';
+import type { Document } from '@sofcom/docx-editor-core/types/document';
 import {
   getSplitCellDialogConfig,
   splitActiveTableCell,
-} from '@docx-editor.dev/core/prosemirror/commands';
+} from '@sofcom/docx-editor-core/prosemirror/commands';
 import {
   addRowAbove,
   addRowBelow,
@@ -35,7 +35,7 @@ import {
   setTableBorderWidth,
   createStyleResolver,
   getTableContext,
-} from '@docx-editor.dev/core/prosemirror';
+} from '@sofcom/docx-editor-core/prosemirror';
 import type { EditorView } from 'prosemirror-view';
 import type { useTableSelection } from '../../../hooks/useTableSelection';
 import type { TableAction } from '../../ui/TableToolbar';

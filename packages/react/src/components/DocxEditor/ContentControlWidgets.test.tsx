@@ -3,7 +3,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, mock, test } from 'bu
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import { act, useRef } from 'react';
 import type { EditorView } from 'prosemirror-view';
-import { schema } from '@docx-editor.dev/core/prosemirror';
+import { schema } from '@sofcom/docx-editor-core/prosemirror';
 import { ContentControlWidgets } from './ContentControlWidgets';
 
 beforeAll(() => GlobalRegistrator.register());

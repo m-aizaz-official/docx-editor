@@ -3,12 +3,12 @@ import type {
   Document,
   FootnoteProperties,
   EndnoteProperties,
-} from '@docx-editor.dev/core/types/document';
-import { setImageWrapType } from '@docx-editor.dev/core/prosemirror/commands';
+} from '@sofcom/docx-editor-core/types/document';
+import { setImageWrapType } from '@sofcom/docx-editor-core/prosemirror/commands';
 import {
   captureInlinePositionEmu,
   toolbarValueToLayoutTarget,
-} from '@docx-editor.dev/core/painter-model';
+} from '@sofcom/docx-editor-core/painter-model';
 import type { EditorView } from 'prosemirror-view';
 import type { ImagePositionData } from '../../dialogs/ImagePositionDialog';
 import type { ImagePropertiesData } from '../../dialogs/ImagePropertiesDialog';

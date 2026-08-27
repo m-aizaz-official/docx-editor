@@ -1,6 +1,6 @@
-import { pixelsToEmu } from '@docx-editor.dev/core';
-import { insertImageNode, setImageWrapType } from '@docx-editor.dev/core/prosemirror/commands';
-import { TextSelection } from '@docx-editor.dev/core/prosemirror';
+import { pixelsToEmu } from '@sofcom/docx-editor-core';
+import { insertImageNode, setImageWrapType } from '@sofcom/docx-editor-core/prosemirror/commands';
+import { TextSelection } from '@sofcom/docx-editor-core/prosemirror';
 import type { EditorView } from 'prosemirror-view';
 
 type LayoutTarget = 'inline' | 'squareLeft' | 'squareRight' | 'topAndBottom' | 'behind' | 'inFront';

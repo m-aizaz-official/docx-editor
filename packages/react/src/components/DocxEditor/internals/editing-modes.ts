@@ -4,7 +4,7 @@
  * forwardRef body share one source of truth.
  */
 
-import type { TranslationKey } from '@docx-editor.dev/i18n';
+import type { TranslationKey } from '@sofcom/docx-editor-react/i18n-internal';
 
 export type EditorMode = 'editing' | 'suggesting' | 'viewing';
 

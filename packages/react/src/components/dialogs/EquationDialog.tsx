@@ -9,7 +9,7 @@
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import type { CSSProperties } from 'react';
-import { renderMathNodes, linearToMathAst } from '@docx-editor.dev/core/math';
+import { renderMathNodes, linearToMathAst } from '@sofcom/docx-editor-core/math';
 import { useTranslation } from '../../i18n';
 
 export interface EquationDialogProps {

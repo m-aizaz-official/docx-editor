@@ -1,12 +1,12 @@
 import { useCallback } from 'react';
-import type { Theme, TabMark } from '@docx-editor.dev/core/types/document';
+import type { Theme, TabMark } from '@sofcom/docx-editor-core/types/document';
 import {
   getTableContext,
   type SelectionState,
   type TableContextInfo,
   createStyleResolver,
-} from '@docx-editor.dev/core/prosemirror';
-import { resolveColorToHex } from '@docx-editor.dev/core/utils';
+} from '@sofcom/docx-editor-core/prosemirror';
+import { resolveColorToHex } from '@sofcom/docx-editor-core/utils';
 import type { EditorView } from 'prosemirror-view';
 import type { SelectionFormatting } from '../../Toolbar';
 

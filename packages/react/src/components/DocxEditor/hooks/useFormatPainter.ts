@@ -12,7 +12,7 @@ import {
   captureMarksFromSelection,
   applyCapturedMarks,
   type CapturedFormatting,
-} from '@docx-editor.dev/core/prosemirror';
+} from '@sofcom/docx-editor-core/prosemirror';
 
 export interface UseFormatPainterOptions {
   getActiveEditorView: () => EditorView | null | undefined;

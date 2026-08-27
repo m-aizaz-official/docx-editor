@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, type RefObject } from 'react';
-import type { PaintedPagesReadyDetail } from '@docx-editor.dev/core/painter-model';
+import type { PaintedPagesReadyDetail } from '@sofcom/docx-editor-core/painter-model';
 
 export function usePaintedPagesReadyDispatcher(
   pagesContainerRef: RefObject<HTMLDivElement | null>,

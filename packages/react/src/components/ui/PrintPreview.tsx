@@ -23,7 +23,7 @@ export {
   parsePageRange,
   formatPageRange,
   isPrintSupported,
-} from '@docx-editor.dev/core';
+} from '@sofcom/docx-editor-core';
 
 // ============================================================================
 // TYPES

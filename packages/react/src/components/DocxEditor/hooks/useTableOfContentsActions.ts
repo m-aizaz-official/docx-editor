@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, type RefObject } from 'react';
-import { updateTableOfContents } from '@docx-editor.dev/core/prosemirror';
-import type { PageLayout } from '@docx-editor.dev/core/pagination-model';
+import { updateTableOfContents } from '@sofcom/docx-editor-core/prosemirror';
+import type { PageLayout } from '@sofcom/docx-editor-core/pagination-model';
 import type { PagedEditorRef } from '../PagedEditor';
 
 function readPageLayout(pagedEditorRef: RefObject<PagedEditorRef | null>): PageLayout | null {

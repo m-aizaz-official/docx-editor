@@ -2,7 +2,7 @@
  * DOM-based selection / caret helpers for PagedEditor.
  *
  * The core DOM walks (`getCaretPositionFromDom` / `readSelectionGeometry`)
- * live in `@docx-editor.dev/core/flow-model` and are shared with the
+ * live in `@sofcom/docx-editor-core/flow-model` and are shared with the
  * Vue adapter. These thin React wrappers resolve the selection-overlay rect,
  * call the core walk, then divide by `zoom` so the result lands in the
  * React overlay's own (unscaled-but-CSS-scaled) coordinate space. React's
@@ -17,9 +17,9 @@ import {
   readSelectionGeometry,
   type CaretPosition,
   type SelectionBox,
-} from '@docx-editor.dev/core/flow-model';
+} from '@sofcom/docx-editor-core/flow-model';
 
-export { applyCellSelectionHighlight } from '@docx-editor.dev/core/flow-model';
+export { applyCellSelectionHighlight } from '@sofcom/docx-editor-core/flow-model';
 
 /**
  * Resolve a caret position by measuring the rendered DOM. Delegates the walk

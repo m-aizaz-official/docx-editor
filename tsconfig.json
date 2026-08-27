@@ -20,12 +20,12 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./packages/react/src/*"],
-      "@docx-editor.dev/react": ["./packages/react/src/index.ts"],
-      "@docx-editor.dev/core": ["./packages/core/src/core.ts"],
-      "@docx-editor.dev/core/headless": ["./packages/core/src/headless.ts"],
-      "@docx-editor.dev/core/core-plugins": ["./packages/core/src/core-plugins/index.ts"],
-      "@docx-editor.dev/core/mcp": ["./packages/core/src/mcp/index.ts"],
-      "@docx-editor.dev/core/*": ["./packages/core/src/*"]
+      "@sofcom/docx-editor-react": ["./packages/react/src/index.ts"],
+      "@sofcom/docx-editor-core": ["./packages/core/src/core.ts"],
+      "@sofcom/docx-editor-core/headless": ["./packages/core/src/headless.ts"],
+      "@sofcom/docx-editor-core/core-plugins": ["./packages/core/src/core-plugins/index.ts"],
+      "@sofcom/docx-editor-core/mcp": ["./packages/core/src/mcp/index.ts"],
+      "@sofcom/docx-editor-core/*": ["./packages/core/src/*"]
     }
   },
   "include": [

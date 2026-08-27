@@ -5,8 +5,8 @@
  * `paintPages` rebuilds the DOM.
  */
 
-import { findBodyPmAnchors } from '@docx-editor.dev/core/flow-model';
-import type { PageLayout } from '@docx-editor.dev/core/pagination-model';
+import { findBodyPmAnchors } from '@sofcom/docx-editor-core/flow-model';
+import type { PageLayout } from '@sofcom/docx-editor-core/pagination-model';
 import { VIEWPORT_PADDING_BOTTOM, VIEWPORT_PADDING_TOP } from './styles';
 
 /**

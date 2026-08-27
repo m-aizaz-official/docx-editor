@@ -18,8 +18,8 @@ import type {
   ParagraphAlignment,
   Style,
   Theme,
-} from '@docx-editor.dev/core/types/document';
-import { resolveColorToHex } from '@docx-editor.dev/core/utils';
+} from '@sofcom/docx-editor-core/types/document';
+import { resolveColorToHex } from '@sofcom/docx-editor-core/utils';
 import { Button } from './ui/Button';
 import { Tooltip } from './ui/Tooltip';
 import { FontPicker } from './ui/FontPicker';

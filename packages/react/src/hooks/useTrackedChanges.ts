@@ -3,7 +3,7 @@ import type { EditorState } from 'prosemirror-state';
 import {
   extractTrackedChanges,
   type TrackedChangesResult,
-} from '@docx-editor.dev/core/prosemirror/utils/extractTrackedChanges';
+} from '@sofcom/docx-editor-core/prosemirror/utils/extractTrackedChanges';
 
 // Re-export the canonical implementations so existing imports keep working.
 export { extractTrackedChanges };

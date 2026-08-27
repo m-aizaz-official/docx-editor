@@ -24,13 +24,13 @@ import {
   syncImeCaretAnchor,
   type CaretPosition,
   type SelectionBox,
-} from '@docx-editor.dev/core/flow-model';
+} from '@sofcom/docx-editor-core/flow-model';
 import type {
   ContentNode,
   LayoutMetrics,
   PageLayout,
-} from '@docx-editor.dev/core/pagination-model';
-import { enclosingSdtGroupIds, applySdtFocus } from '@docx-editor.dev/core/painter-model';
+} from '@sofcom/docx-editor-core/pagination-model';
+import { enclosingSdtGroupIds, applySdtFocus } from '@sofcom/docx-editor-core/painter-model';
 
 import type { OffscreenEditorHostRef } from '../OffscreenEditorHost';
 import type { ImageSelectionInfo } from '../overlays/ImageSelectionOverlay';

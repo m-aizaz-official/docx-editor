@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react';
 
-import type { PaintedPagesGuard } from '@docx-editor.dev/core/internal/paintedPagesGuard';
+import type { PaintedPagesGuard } from '@sofcom/docx-editor-core/internal/paintedPagesGuard';
 
 /**
  * Keeps the adapter-private painted-pages guard live for child passive effects.

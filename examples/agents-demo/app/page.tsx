@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
-import { DocxEditor, type DocxEditorRef } from '@docx-editor.dev/react';
+import { DocxEditor, type DocxEditorRef } from '@sofcom/docx-editor-react';
 
 type Phase = 'upload' | 'roasting' | 'result';
 

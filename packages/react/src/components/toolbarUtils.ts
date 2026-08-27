@@ -9,8 +9,8 @@ import type {
   TextFormatting,
   ParagraphFormatting,
   Theme,
-} from '@docx-editor.dev/core/types/document';
-import { resolveColorToHex } from '@docx-editor.dev/core/utils';
+} from '@sofcom/docx-editor-core/types/document';
+import { resolveColorToHex } from '@sofcom/docx-editor-core/utils';
 import { pointsToHalfPoints } from './ui/FontSizePicker';
 import { createDefaultListState } from './ui/ListButtons';
 import type { SelectionFormatting, FormattingAction } from './Toolbar';
@@ -21,8 +21,8 @@ import type { SelectionFormatting, FormattingAction } from './Toolbar';
 export {
   HIGHLIGHT_HEX_TO_NAME,
   mapHexToHighlightName,
-} from '@docx-editor.dev/core/utils/highlightColors';
-import { mapHexToHighlightName } from '@docx-editor.dev/core/utils/highlightColors';
+} from '@sofcom/docx-editor-core/utils/highlightColors';
+import { mapHexToHighlightName } from '@sofcom/docx-editor-core/utils/highlightColors';
 
 // ============================================================================
 // FORMATTING STATE EXTRACTION

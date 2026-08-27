@@ -1,11 +1,11 @@
 import { useCallback, useMemo, useState } from 'react';
-import type { Document, SectionProperties } from '@docx-editor.dev/core/types/document';
+import type { Document, SectionProperties } from '@sofcom/docx-editor-core/types/document';
 import {
   setIndentLeft,
   setIndentRight,
   setIndentFirstLine,
   removeTabMark,
-} from '@docx-editor.dev/core/prosemirror/commands';
+} from '@sofcom/docx-editor-core/prosemirror/commands';
 import type { EditorView } from 'prosemirror-view';
 
 /**

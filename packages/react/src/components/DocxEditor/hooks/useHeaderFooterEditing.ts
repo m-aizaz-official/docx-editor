@@ -5,13 +5,13 @@ import type {
   BlockContent,
   HeaderFooterType,
   SectionProperties,
-} from '@docx-editor.dev/core/types/document';
-import { resolveHeaderFooter } from '@docx-editor.dev/core/flow-model';
-import { proseDocToBlocks } from '@docx-editor.dev/core/prosemirror/conversion';
+} from '@sofcom/docx-editor-core/types/document';
+import { resolveHeaderFooter } from '@sofcom/docx-editor-core/flow-model';
+import { proseDocToBlocks } from '@sofcom/docx-editor-core/prosemirror/conversion';
 import {
   removeHeaderFooterForSection,
   updateSectionPropertiesAt,
-} from '@docx-editor.dev/core/utils/removeHeaderFooterForSection';
+} from '@sofcom/docx-editor-core/utils/removeHeaderFooterForSection';
 import type { InlineHeaderFooterEditorRef } from '../../InlineHeaderFooterEditor';
 
 export interface HeaderFooterClickTarget {

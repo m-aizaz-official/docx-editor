@@ -1,7 +1,7 @@
 import { useImperativeHandle } from 'react';
-import type { Document } from '@docx-editor.dev/core/types/document';
-import type { Comment } from '@docx-editor.dev/core/types/content';
-import { DocumentAgent } from '@docx-editor.dev/core/agent';
+import type { Document } from '@sofcom/docx-editor-core/types/document';
+import type { Comment } from '@sofcom/docx-editor-core/types/content';
+import { DocumentAgent } from '@sofcom/docx-editor-core/agent';
 import {
   createStyleResolver,
   findContentControlsInPM,
@@ -11,31 +11,31 @@ import {
   setContentControlValueTr,
   type SelectionState,
   type PMContentControl,
-} from '@docx-editor.dev/core/prosemirror';
+} from '@sofcom/docx-editor-core/prosemirror';
 import {
   findInDocument as findInDocumentCore,
   getSelectionInfo as getSelectionInfoCore,
   getPageContent as getPageContentCore,
-} from '@docx-editor.dev/core/prosemirror/queries';
+} from '@sofcom/docx-editor-core/prosemirror/queries';
 import {
   applyFormatting,
   setParagraphStyle,
   insertBreak,
-} from '@docx-editor.dev/core/prosemirror/applyFormatting';
+} from '@sofcom/docx-editor-core/prosemirror/applyFormatting';
 import {
   ContentControlNotFoundError,
   type ContentControlFilter,
   type ContentControlValue,
-} from '@docx-editor.dev/core/agent';
-import type { DocxInput, ScrollToParaIdOptions } from '@docx-editor.dev/core/utils';
-import { getCachedNumberingMap } from '@docx-editor.dev/core/docx';
+} from '@sofcom/docx-editor-core/agent';
+import type { DocxInput, ScrollToParaIdOptions } from '@sofcom/docx-editor-core/utils';
+import { getCachedNumberingMap } from '@sofcom/docx-editor-core/docx';
 import type { DocxEditorRef } from '../../DocxEditor';
 import type { PagedEditorRef } from '../PagedEditor';
 import {
   addCommentToRange,
   applyProposedChange,
-} from '@docx-editor.dev/core/prosemirror/commentOps';
-import type { CommentIdAllocator } from '@docx-editor.dev/core/prosemirror/commentIdAllocator';
+} from '@sofcom/docx-editor-core/prosemirror/commentOps';
+import type { CommentIdAllocator } from '@sofcom/docx-editor-core/prosemirror/commentIdAllocator';
 import { createComment } from '../commentFactories';
 
 /**
